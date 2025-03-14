@@ -6,6 +6,13 @@
   <title>Coming soon...</title>
   <script src="node_modules/phaser/dist/phaser.min.js"></script>
   <style>
+    @font-face {
+      font-family: 'Luxomona';
+      src: url('/assets/fonts/Luxomona.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     html,
     body {
       margin: 0;
@@ -20,6 +27,9 @@
 </head>
 
 <body>
+  <!-- USED TO LOAD FONT -->
+  <div style="font-family:Luxomona; position:absolute; left:-1000px; visibility:hidden;">.</div>
+
   <script src="scenes/MenuScene.js"></script>
   <script src="scenes/PlanetChemistryScene.js"></script>
   <script src="scenes/PlanetTechnologyScene.js"></script>
