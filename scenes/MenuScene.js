@@ -11,6 +11,7 @@ class MenuScene extends Phaser.Scene {
 
     startBtn.on('pointerdown', () => {
       this.scene.start('PlanetChemistryScene');
+      // this.scene.start('PlanetGeologyScene');
     });
   }
 }
