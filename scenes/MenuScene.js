@@ -13,16 +13,16 @@ class MenuScene extends Phaser.Scene {
     const bg = this.add.image(this.scale.width / 2, this.scale.height / 2, 'space-bg');
     const scaleX = this.scale.width / bg.width;
     const scaleY = this.scale.height / bg.height;
-    const scale = Math.max(scaleX, scaleY);
     bg.setScale(scaleX, scaleY);
 
     // Title text clearly visible on background
-    this.add.text(this.scale.width / 2, 250, 'Space Conquer 2', { fontSize: '80px', fontFamily: 'Luxomona', fill: '#FFBF00' })
+    this.add.text(this.scale.width / 2, 350, 'Space Conquer 2', { fontSize: '100px', fontFamily: 'Luxomona', fill: '#FFBF00' })
       .setOrigin(0.5);
 
     // Styled interactive Start button
     const startBtn = this.add.text(this.scale.width / 2, 500, '▶️ Start Exploring', {
-        fontSize: '48px',
+        fontSize: '42px',
+        fontFamily: 'Orbitron',
         fill: '#00ff88',
         backgroundColor: 'rgba(0,0,0,0.5)',
         padding: { x: 10, y: 8 },
