@@ -1,18 +1,20 @@
 class PlanetTechnologyScene extends Phaser.Scene {
   constructor() {
-    super({ key: 'PlanetTechnologyScene' });
+    super({ key: "PlanetTechnologyScene" });
   }
 
   create() {
-    this.add.text(400, 50, 'Planet 2', { fontSize: '32px', fill: '#ffffff' }).setOrigin(0.5);
+    this.add
+      .text(400, 50, "Planet 2", { fontSize: "32px", fill: "#ffffff" })
+      .setOrigin(0.5);
     // Example content here
 
-    const backMenuBtn = this.add.text(400, 550, '← Menu', { fontSize: '24px', fill: '#f00' })
-      .setOrigin(0.5)
+    const nextPlanetBtn = this.add
+      .text(700, 550, "Next Planet →", { fontSize: "20px", fill: "#0ff" })
       .setInteractive();
 
-    backMenuBtn.on('pointerdown', () => {
-      this.scene.start('MenuScene');
+    nextPlanetBtn.on("pointerdown", () => {
+      this.scene.start("PlanetPhysicsScene");
     });
   }
 }
