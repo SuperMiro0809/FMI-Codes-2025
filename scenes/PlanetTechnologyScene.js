@@ -27,7 +27,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
       fill: '#ffffff',
     });
 
-    const closeButton = this.add.text(180, 330, '[RESET]', {
+    const resetButton = this.add.text(180, 330, '[RESET]', {
       fontSize: '20px',
       fontFamily: 'Orbitron',
       fill: '#ff0000',
@@ -35,9 +35,18 @@ class PlanetTechnologyScene extends Phaser.Scene {
       padding: { x: 6, y: 4 },
     }).setInteractive().setInteractive({ useHandCursor: true });
 
-    closeButton.on('pointerdown', () => this.createGrid());
+    resetButton.on('pointerdown', () => this.createGrid());
 
-    this.popupContainer.add([popupBg, popupText, closeButton]);
+    this.input.keyboard.on('keydown-Z', () => {
+      const lastDrawnLine = this.lines.pop();
+      const { graphics, points } = lastDrawnLine;
+
+      graphics.destroy();
+      this.resetPreviouslyOccupiedCells(points);
+      this.resetDotsConnectionStatus(points);
+    });
+
+    this.popupContainer.add([popupBg, popupText, resetButton]);
     this.createGrid();
     this.add.existing(this.popupContainer);
   }
@@ -216,6 +225,23 @@ class PlanetTechnologyScene extends Phaser.Scene {
     }
   }
 
+  resetPreviouslyOccupiedCells(points) {
+    for (let point of points) {
+      this.grid[point.row][point.col].occupied = false;
+    }
+  }
+
+  resetDotsConnectionStatus(points) {
+    let start = points[0];
+    let end = points[points.length - 1];
+
+    let startDot = this.dots.find(d => d.gridPosition.row === start.row && d.gridPosition.col === start.col);
+    let endDot = this.dots.find(d => d.gridPosition.row === end.row && d.gridPosition.col === end.col);
+
+    startDot.connected = false;
+    endDot.connected = false;
+  }
+
   drawPath(path) {
     let graphics = this.add.graphics();
     graphics.lineStyle(4, this.currentColor, 1);
@@ -226,7 +252,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
       graphics.lineBetween(prev.x, prev.y, curr.x, curr.y);
     }
 
-    this.lines.push(graphics);
+    this.lines.push({ graphics, points: this.currentPath });
     this.popupContainer.add(graphics);
   }
 
