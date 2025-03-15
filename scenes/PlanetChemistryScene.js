@@ -1,9 +1,17 @@
 let globalSelectedOptions = new Array(6).fill(null);  
+let globalMenuOptionPairs = [
+  { fact: "fact1", answer: "ans1" },
+  { fact: "fact2", answer: "ans2" },
+  { fact: "fact3", answer: "ans3" },
+  { fact: "fact4", answer: "ans4" },
+  { fact: "fact5", answer: "ans5" },
+  { fact: "fact6", answer: "ans6" }
+];
 class PlanetChemistryScene extends Phaser.Scene {
   constructor() {
     super({ key: 'PlanetChemistryScene' });
     this.menus = [];
-    this.menuOptions = ["Option 1", "Option 2", "Option 3", "Option 4", "Option 5", "Option 6"];
+    this.menuOptions = [globalMenuOptionPairs[0].answer, globalMenuOptionPairs[1].answer,  globalMenuOptionPairs[2].answer, globalMenuOptionPairs[3].answer, globalMenuOptionPairs[4].answer, globalMenuOptionPairs[5].answer];
     this.selectedOptions = {};
   }
 
@@ -28,16 +36,25 @@ class PlanetChemistryScene extends Phaser.Scene {
     const selectedFrames = [0, 12, 40, 16, 28,30]; //change later!!!
     const spacingX = 120;
     for (let i = 0; i < selectedFrames.length; i++) {
+      
+      this.add.text(startX + i * menuSpacing, startY-150, globalMenuOptionPairs[i].fact, {
+        fontSize: '14px',
+        fill: '#ffffff',
+        backgroundColor: '#000'
+      })
+      .setPadding(5)
+      .setOrigin(0.5);
+  
+
       this.add.image(startX+45 + (i * spacingX), startY-30, 'flasks', selectedFrames[i])
         .setOrigin(1)
         .setScale(3);
     }
 
-    this.add.text(400, 50, 'Alchemy', { fontSize: '32px', fill: '#ffffff' }).setOrigin(0.5);
-    
+    this.add.text(400, 50, 'Alchemy', { fontSize: '32px', fill: '#6699ff' }).setOrigin(0.5);
     
     for (let i = 0; i < menuCount; i++) {
-        let menu = this.add.text(startX + i * menuSpacing, startY, `Menu ${i + 1}`,
+        let menu = this.add.text(startX + i * menuSpacing, startY, `options`,
             { fontSize: '20px', fill: '#fff', backgroundColor: '#000' })
             .setPadding(10)
             .setInteractive()
@@ -70,13 +87,54 @@ class PlanetChemistryScene extends Phaser.Scene {
         }
     });
 
-    const nextPlanetBtn = this.add.text(700, 550, 'Next Planet →', { fontSize: '20px', fill: '#0ff' })
-      .setInteractive();
+    const submitBtn = this.add.text(750, 570, 'Submit', {
+      fontSize: '20px',
+      fill: '#ffffff',
+      backgroundColor: '#6699ff'
+    })
+    .setPadding(10)
+    .setInteractive()
+    .setOrigin(0.5);
+  
+    submitBtn.on('pointerdown', () => this.handleSubmit());
 
-    nextPlanetBtn.on('pointerdown', () => {
-      this.scene.start('PlanetTechnologyScene');
+    // const nextPlanetBtn = this.add.text(700, 550, 'Next Planet →', { fontSize: '20px', fill: '#0ff' })
+    //   .setInteractive();
+
+    // nextPlanetBtn.on('pointerdown', () => {
+    //   this.scene.start('PlanetTechnologyScene');
+    // });
+  }
+
+  handleSubmit() {
+    if (this.checkCorrectSubmition()) {
+      this.showPopup("Correct! Proceeding to the next planet...");
+      this.time.delayedCall(2000, () => {
+        this.scene.start('PlanetTechnologyScene');
+      });
+    } 
+    else if (this.nothingIsSelected()) {
+      this.showPopup("You have not selected an answer for every element!");
+    } 
+    else {
+      this.showPopup("Wrong answer! Please try again.");
+    }
+  }
+
+  nothingIsSelected(){
+    return Object.entries(this.selectedOptions).every(([key, value]) => {
+      if (value === null) return true;
+      return false;
     });
   }
+
+  checkCorrectSubmition() {
+    return Object.entries(this.selectedOptions).every(([key, value]) => {
+      if (value === null) return false;
+      return globalMenuOptionPairs[key].answer === value;
+    });
+  }
+
 
   showDropdown(menu) {
     if (menu.optionsGroup) return;
