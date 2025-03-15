@@ -2,6 +2,8 @@ const tileSize = 40;
 const worldWidth = 400;
 const worldHeight = window.innerHeight - 200;
 const playerSpeed = 100;
+const changeOfCrystals = 0.1;
+const changeOfStone = 0.25;
 
 class PlanetGeologyScene extends Phaser.Scene {
   constructor() {
@@ -12,6 +14,8 @@ class PlanetGeologyScene extends Phaser.Scene {
 		// this.load.spritesheet('ground', 'assets/tiles.png', {frameWidth: 16, frameHeight: 16});
 		this.load.image('ground_top', 'assets/tile.png');
 		this.load.image('ground_plain', 'assets/tile_normal.png');
+		this.load.image('ground_crystals', 'assets/tile_gems.png');
+		this.load.image('ground_stone', 'assets/tile_stone.png');
   }
 	getTilePlayerIsOn() {
     const playerX = this.player.x + 16;
@@ -27,8 +31,7 @@ class PlanetGeologyScene extends Phaser.Scene {
     }
 	}
 	create() {
-		// this.physics.world.gravity.y = 300;
-		
+		this.crystalsCount = 0;
     this.player = this.physics.add.sprite((window.innerWidth + tileSize) / 2, 100, 'player');
 		this.player.setSize(18, 32);
 		this.player.setOffset(7, 0);
@@ -44,6 +47,10 @@ class PlanetGeologyScene extends Phaser.Scene {
 				let groundTile;
 				if(j == 0){
 					groundTile = this.ground.create(this.startX +  i * (tileSize), this.startY +  j * (tileSize), 'ground_top', 6 * 33 + 6);
+				} else if(Math.random() < changeOfStone){
+					groundTile = this.ground.create(this.startX +  i * (tileSize), this.startY +  j * (tileSize), 'ground_stone', 6 * 33 + 6);
+				} else if(Math.random() < changeOfCrystals) {
+					groundTile = this.ground.create(this.startX +  i * (tileSize), this.startY +  j * (tileSize), 'ground_crystals', 6 * 33 + 6);
 				} else {
 					groundTile = this.ground.create(this.startX +  i * (tileSize), this.startY +  j * (tileSize), 'ground_plain', 6 * 33 + 6);
 				}
@@ -56,6 +63,12 @@ class PlanetGeologyScene extends Phaser.Scene {
 		this.player.setCollideWorldBounds(true);
 		// this.player.setBounce(0.2);
 		this.player.setGravityY(300);
+
+		this.scoreText = this.add.text(50, 30, "Mined crystals: " + this.crystalsCount, {
+			fontSize: '32px',
+			fill: '#ffffff',
+			fontFamily: 'PixelRoundedFont',
+	});
     // Add animations
     this.anims.create({
       key: 'idle',
@@ -151,9 +164,16 @@ class PlanetGeologyScene extends Phaser.Scene {
 		if (Phaser.Input.Keyboard.JustDown(key)) {
 				key.mineStartTime = this.time.now; 
 		}
+		
 		if (this.time.now - key.mineStartTime > 750) {
+			if(this.ground.children.entries[tileIndex].texture.key == 'ground_crystals') {
+				this.crystalsCount++;
+				this.scoreText.setText("Mined crystals: " + this.crystalsCount);
+			}
+			if(this.ground.children.entries[tileIndex].texture.key != 'ground_stone') {
 				this.removeTile(tileIndex);
 				key.mineStartTime = this.time.now; 
+			}
 		}
 	}
 

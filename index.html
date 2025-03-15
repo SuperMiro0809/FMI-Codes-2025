@@ -6,12 +6,22 @@
   <title>Coming soon...</title>
   <script src="node_modules/phaser/dist/phaser.min.js"></script>
   <style>
+		@font-face {
+    	font-family: 'PixelRoundedFont';
+    	src: url('assets/PixelRounded.ttf') format('truetype');
+  	}
     html,
     body {
       margin: 0;
       padding: 0;
       overflow: hidden;
     }
+		.title {
+			font-family: "PixelRoundedFont";
+			position: absolute;
+			top: -10000px;
+			opacity: 0;
+		}
 
     canvas {
       display: block;
@@ -20,6 +30,7 @@
 </head>
 
 <body>
+	<h1 class="title">Text</h1> <!-- for some reason the font doesn't load without this -->
   <script src="scenes/MenuScene.js"></script>
   <script src="scenes/PlanetChemistryScene.js"></script>
   <script src="scenes/PlanetTechnologyScene.js"></script>
