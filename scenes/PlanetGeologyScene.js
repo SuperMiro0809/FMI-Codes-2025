@@ -2,8 +2,9 @@ const tileSize = 40;
 const worldWidth = 400;
 const worldHeight = window.innerHeight + 500;
 const playerSpeed = 100;
-const changeOfCrystals = 0.1;
+const changeOfCrystals = 0.08;
 const cameraSpeed = 0.5;
+const maxCrystals = 10;
 const miningTime = 750;
 const changeOfStone = 0.25;
 
@@ -12,7 +13,9 @@ class PlanetGeologyScene extends Phaser.Scene {
     super({ key: 'PlanetGeologyScene' });
   }
 	preload() {
-		this.load.spritesheet('player', 'assets/miner.png', {frameWidth: 32, frameHeight: 32});
+		this.load.spritesheet('player', 'assets/miner.png', {
+			frameWidth: 32, frameHeight: 32
+		});
 		// this.load.spritesheet('ground', 'assets/tiles.png', {frameWidth: 16, frameHeight: 16});
 		this.load.image('ground_top', 'assets/tile.png');
 		this.load.image('ground_plain', 'assets/tile_normal.png');
@@ -75,7 +78,6 @@ class PlanetGeologyScene extends Phaser.Scene {
 		}
 		
 		this.physics.add.collider(this.player, this.ground);
-		this.player.setCollideWorldBounds(true);
 		this.player.setGravityY(300);
 
 		this.scoreText = this.add.text(35, 35, "Mined crystals: " + this.crystalsCount, {
@@ -83,6 +85,7 @@ class PlanetGeologyScene extends Phaser.Scene {
 			fill: '#ffffff',
 			fontFamily: 'PixelRoundedFont',
 		});
+		this.scoreText.setDepth(10);
 		this.scoreText.setScrollFactor(0);
     // Add animations
     this.anims.create({
@@ -149,13 +152,12 @@ class PlanetGeologyScene extends Phaser.Scene {
 	removeTile(index) {
     const tile = this.ground.children.entries[index];	
     tile.setActive(false).setVisible(false).disableBody(true, true); 
-    // tile.destroy(); 
   }
 
-  update(time, delta) {
+  update() {
 		this.time.delayedCall(10000, () => {
 			this.timer += 1;
-			if(this.timer % 87 == 0) {
+			if(this.timer % 87 == 0 && this.isAlive) {
 				this.updateGrid();
 			}
 		});
@@ -165,7 +167,7 @@ class PlanetGeologyScene extends Phaser.Scene {
 			}
 		});
 		if(this.cameras.main.scrollY - this.player.y > 0) {
-			// this.isAlive = false;
+			this.isAlive = false;
 		}
     let tilePlayer = this.getTilePlayerIsOn();
 		
@@ -180,40 +182,31 @@ class PlanetGeologyScene extends Phaser.Scene {
 					this.player.anims.play('mine_right', true);
 					this.handleMining(this.cursors.right, tilePlayer + 1 - this.groundXLength); // Tile to the right
 				}
-				this.player.setVelocityX(playerSpeed);
-		
-				// Prevent player from moving off screen to the right
-				if (this.player.x > window.innerWidth / 2 + worldWidth / 2 + 32) {
+			} else if (this.cursors.left.isDown) {
+					// Check if we can move to the left or need to mine
+					if (tilePlayer < this.groundXLength || !this.isTileActive(tilePlayer - 1 - this.groundXLength)) {
+							// Player moves left
+							this.player.anims.play('run_left', true);
+					} else {
+							// Player mines to the left
+							this.player.anims.play('mine_left', true);
+							this.handleMining(this.cursors.left, tilePlayer - 1 - this.groundXLength); // Tile to the left
+					}
+					this.player.setVelocityX(-playerSpeed);
+			} else if (this.cursors.down.isDown) {
+					// Player mines downward
+					this.player.anims.play('mine_down', true);
+					this.handleMining(this.cursors.down, tilePlayer); // Current tile
+			} else {
+					// Player idle when no keys are pressed
+					this.player.anims.play('idle', true);
 					this.player.setVelocityX(0);
-				}
-		} else if (this.cursors.left.isDown) {
-				// Check if we can move to the left or need to mine
-				if (tilePlayer < this.groundXLength || !this.isTileActive(tilePlayer - 1 - this.groundXLength)) {
-						// Player moves left
-						this.player.anims.play('run_left', true);
-				} else {
-						// Player mines to the left
-						this.player.anims.play('mine_left', true);
-						this.handleMining(this.cursors.left, tilePlayer - 1 - this.groundXLength); // Tile to the left
-				}
-				this.player.setVelocityX(-playerSpeed);
-		
-				// Prevent player from moving off screen to the left
-				if (this.player.x < window.innerWidth / 2 - worldWidth / 2) {
-						this.player.setVelocityX(0);
-				}
-		} else if (this.cursors.down.isDown) {
-				// Player mines downward
-				this.player.anims.play('mine_down', true);
-				this.handleMining(this.cursors.down, tilePlayer); // Current tile
-		} else {
-				// Player idle when no keys are pressed
-				this.player.anims.play('idle', true);
-				this.player.setVelocityX(0);
-		}
+			}
 		
 		} else {
 			this.player.anims.play('idle', true);
+			this.player.setVelocityX(0);
+
 			//lost
 		}
 	}
@@ -224,14 +217,14 @@ class PlanetGeologyScene extends Phaser.Scene {
 
 	handleMining(key, tileIndex) {
 		if (Phaser.Input.Keyboard.JustDown(key)) {
-				key.mineStartTime = this.time.now; 
+			key.mineStartTime = this.time.now; 
 		}
 		
 		if (this.time.now - key.mineStartTime > miningTime) {
 			if(this.ground.children.entries[tileIndex].texture.key == 'ground_crystals') {
 				this.crystalsCount++;
 				
-				if(this.crystalsCount == 5) {
+				if(this.crystalsCount == maxCrystals) {
 					//won
 					this.cameras.main.fadeOut(1000);
 				}
