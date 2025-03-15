@@ -41,6 +41,8 @@ class SpaceScene extends Phaser.Scene {
   // }
 
   create(data) {
+    this.cameras.main.fadeIn(500, 0, 0, 0);
+
     this.bg = this.add
       .tileSprite(
         0,

@@ -14,7 +14,7 @@ class MenuScene extends Phaser.Scene {
     const scaleY = this.scale.height / bg.height;
     bg.setScale(scaleX, scaleY);
 
-    const titleText = this.add.text(this.scale.width / 2, 350, 'Space Conquer 2', { fontSize: '100px', fontFamily: 'Luxomona' })
+    const titleText = this.add.text(this.scale.width / 2, 350, 'Galactic Science Quest', { fontSize: '100px', fontFamily: 'Luxomona' })
       .setOrigin(0.5);
 
     this.titleText = titleText;

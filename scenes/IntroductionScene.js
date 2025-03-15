@@ -12,8 +12,8 @@ class IntroductionScene extends Phaser.Scene {
     this.cameras.main.fadeIn(500, 0, 0, 0);
 
     // add background music
-    const music = this.sound.add('bg-music', { loop: false, volume: 0.5 });
-    music.play();
+    this.music = this.sound.add('bg-music', { loop: false, volume: 0.5 });
+    this.music.play();
 
     // full screen background
     const bg = this.add.image(this.scale.width / 2, this.scale.height / 2, 'space-bg');
@@ -22,7 +22,7 @@ class IntroductionScene extends Phaser.Scene {
     bg.setScale(scaleX, scaleY);
 
     const crawlText = `
-      SPACE CONQUER 2
+      GALACTIC SCIENCE QUEST
 
       It is a dark time for planet Earth. Centuries of greed and conflict have triggered an environmental catastrophe. Oceans rise, deserts spread, and the air grows toxic. Humanity's time is quickly running out.
 
@@ -107,11 +107,27 @@ class IntroductionScene extends Phaser.Scene {
     });
 
     skipBtn.on('pointerdown', () => {
-      this.cameras.main.fadeOut(500, 0, 0, 0);
-      this.time.delayedCall(500, () => {
-        music.stop();
-        this.scene.start('PlanetTechnologyScene');
+      this.cameras.main.fadeOut(1500, 0, 0, 0);
+      this.fadeOutMusic(() => {
+        this.scene.start('SpaceScene', { rightPlanet: 'technoPlanet' });
       });
     });
+  }
+
+  fadeOutMusic(callback) {
+    if (this.music && this.music.isPlaying) {
+      this.tweens.add({
+        targets: this.music,
+        volume: 0,
+        duration: 1500,
+        ease: 'Linear',
+        onComplete: () => {
+          this.music.stop();
+          if (callback) callback();
+        }
+      });
+    } else if (callback) {
+      callback();
+    }
   }
 }

@@ -1,3 +1,5 @@
+const GRID_OFFSET_Y_ADDON = 60;
+
 class PlanetTechnologyScene extends Phaser.Scene {
   constructor() {
     super({ key: 'PlanetTechnologyScene' });
@@ -20,24 +22,45 @@ class PlanetTechnologyScene extends Phaser.Scene {
   createPopup() {
     this.popupContainer = this.add.container(this.scale.width / 2, this.scale.height / 2).setAlpha(0);
 
-    const popupBg = this.add.rectangle(0, 0, 720, 800, 0x222222).setStrokeStyle(3, 0xffffff);
-    const popupText = this.add.text(-290, -340, 'Connect the Cables', {
+    const popupBg = this.add.rectangle(0, 0, 720, 860, 0x222222).setStrokeStyle(3, 0xffffff);
+    const popupTitle = this.add.text(-290, -380, 'Connect the Cables', {
       fontFamily: 'Orbitron',
       fontSize: '26px',
+      fill: '#FFBF00',
+    });
+
+    const instructionsText = `
+      Press on the dots, hold and drag your mouse to draw a
+      connection with the corresponing dot.
+      Press Z to revert an action.
+    `
+
+    const popupText = this.add.text(-320, -350, instructionsText, {
+      fontFamily: 'Orbitron',
+      fontSize: '20px',
       fill: '#ffffff',
     });
 
-    const closeButton = this.add.text(180, 330, '[RESET]', {
+    const resetButton = this.add.text(180, 370, '[RESET]', {
       fontSize: '20px',
       fontFamily: 'Orbitron',
       fill: '#ff0000',
       backgroundColor: '#333333',
       padding: { x: 6, y: 4 },
-    }).setInteractive().setInteractive({ useHandCursor: true });
+    }).setInteractive({ useHandCursor: true });
 
-    closeButton.on('pointerdown', () => this.createGrid());
+    resetButton.on('pointerdown', () => this.createGrid());
 
-    this.popupContainer.add([popupBg, popupText, closeButton]);
+    this.input.keyboard.on('keydown-Z', () => {
+      const lastDrawnLine = this.lines.pop();
+      const { graphics, points } = lastDrawnLine;
+
+      graphics.destroy();
+      this.resetPreviouslyOccupiedCells(points);
+      this.resetDotsConnectionStatus(points);
+    });
+
+    this.popupContainer.add([popupBg, popupTitle, popupText, resetButton]);
     this.createGrid();
     this.add.existing(this.popupContainer);
   }
@@ -58,7 +81,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
 
     // center the grid inside the popup
     let gridOffsetX = -this.gridSize * this.cellSize / 2;
-    let gridOffsetY = -this.gridSize * this.cellSize / 2 + 20;
+    let gridOffsetY = -this.gridSize * this.cellSize / 2 + GRID_OFFSET_Y_ADDON;
 
     for (let row = 0; row < this.gridSize; row++) {
       this.grid[row] = [];
@@ -124,12 +147,12 @@ class PlanetTechnologyScene extends Phaser.Scene {
     if (!this.isDrawing) return;
 
     let col = Math.floor((pointer.x - this.popupContainer.x + this.gridSize * this.cellSize / 2) / this.cellSize);
-    let row = Math.floor((pointer.y - this.popupContainer.y + this.gridSize * this.cellSize / 2 - 20) / this.cellSize);
+    let row = Math.floor((pointer.y - this.popupContainer.y + this.gridSize * this.cellSize / 2 - GRID_OFFSET_Y_ADDON) / this.cellSize);
 
     if (row < 0 || row >= this.gridSize || col < 0 || col >= this.gridSize) return;
 
     let x = -this.gridSize * this.cellSize / 2 + col * this.cellSize;
-    let y = -this.gridSize * this.cellSize / 2 + row * this.cellSize + 20;
+    let y = -this.gridSize * this.cellSize / 2 + row * this.cellSize + GRID_OFFSET_Y_ADDON;
 
     this.hoverSquare.setPosition(x, y);
     this.hoverSquare.setAlpha(1);
@@ -203,6 +226,24 @@ class PlanetTechnologyScene extends Phaser.Scene {
       this.updateOccupiedCells();
       startDot.connected = true;
       endDot.connected = true;
+
+      if (this.checkIfWin()) {
+        this.add.text(this.scale.width / 2, this.scale.height / 2, 'You Win!', {
+          fontSize: '32px',
+          fontFamily: 'Orbitron',
+          fill: '#00ff88',
+          backgroundColor: '#222222',
+          padding: { x: 20, y: 10 }
+        }).setOrigin(0.5).setDepth(1000); // Center the text and bring it to the top layer
+
+        // Wait for 2 seconds before fading out
+        this.time.delayedCall(2000, () => {
+          this.cameras.main.fadeOut(500, 0, 0, 0);
+          this.time.delayedCall(500, () => {
+            this.scene.start('MenuScene');
+          });
+        });
+      }
     } else {
       this.resetPath();
     }
@@ -216,6 +257,23 @@ class PlanetTechnologyScene extends Phaser.Scene {
     }
   }
 
+  resetPreviouslyOccupiedCells(points) {
+    for (let point of points) {
+      this.grid[point.row][point.col].occupied = false;
+    }
+  }
+
+  resetDotsConnectionStatus(points) {
+    let start = points[0];
+    let end = points[points.length - 1];
+
+    let startDot = this.dots.find(d => d.gridPosition.row === start.row && d.gridPosition.col === start.col);
+    let endDot = this.dots.find(d => d.gridPosition.row === end.row && d.gridPosition.col === end.col);
+
+    startDot.connected = false;
+    endDot.connected = false;
+  }
+
   drawPath(path) {
     let graphics = this.add.graphics();
     graphics.lineStyle(4, this.currentColor, 1);
@@ -226,7 +284,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
       graphics.lineBetween(prev.x, prev.y, curr.x, curr.y);
     }
 
-    this.lines.push(graphics);
+    this.lines.push({ graphics, points: this.currentPath });
     this.popupContainer.add(graphics);
   }
 
@@ -236,6 +294,14 @@ class PlanetTechnologyScene extends Phaser.Scene {
     this.previewLines.forEach(line => line.destroy());
     this.previewLines = [];
     this.hoverSquare.setAlpha(0);
+  }
+
+  checkIfWin() {
+    for (const dot of this.dots) {
+      if (!dot.connected) return false;
+    }
+
+    return true;
   }
 
   showPopup() {
