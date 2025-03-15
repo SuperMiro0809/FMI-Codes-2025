@@ -58,17 +58,6 @@ class SpaceScene extends Phaser.Scene {
     this.leftPlanet = this.physics.add.sprite(-spaceConfig.planetOffset, this.game.config.height/2, "Earth")
     this.leftPlanet.setVelocity(-spaceConfig.planetSpeed, 0);
 
-    // this.anims.create({
-    //     key: 'planetAnim',
-    //     frames: this.anims.generateFrameNumbers('earth', { start: 0, end: 60 }), // Adjust based on frame count
-    //     frameRate: 10,
-    //     repeat: -1
-    // });
-
-    // this.planet = this.add.sprite(-100, 300, 'earth');
-    // this.planet.setScale(10); // Make it bigger
-    // this.planet.play('planetAnim'); // Play animation
-
     this.cursors = this.input.keyboard.createCursorKeys();
 
     this.asteroids = this.physics.add.group();
@@ -134,7 +123,6 @@ class SpaceScene extends Phaser.Scene {
     asteroid.setCollideWorldBounds(false);
 
     asteroid.setBodySize(asteroid.width * 0.4, asteroid.height * 0.4);
-    // asteroid.setOffset(asteroid.width * 0.2, asteroid.height * 0.2); 
 
     this.time.delayedCall(
       (this.game.config.width / spaceConfig.asteroidSpeed) * 1000,
@@ -144,12 +132,10 @@ class SpaceScene extends Phaser.Scene {
     );
   }
   hitAsteroid(spaceship, asteroid) {
-    // Stop movement
     spaceship.setVelocity(0);
-    spaceship.setTint(0xff0000); // Flash red
-    this.physics.pause(); // Stop the game
+    spaceship.setTint(0xff0000);
+    this.physics.pause();
 
-    // Restart game after 2 seconds
     this.time.delayedCall(2000, () => {
       this.scene.restart();
     });
