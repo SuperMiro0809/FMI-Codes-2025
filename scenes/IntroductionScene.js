@@ -22,7 +22,7 @@ class IntroductionScene extends Phaser.Scene {
     bg.setScale(scaleX, scaleY);
 
     const crawlText = `
-      SPACE CONQUER 2
+      GALACTIC SCIENCE QUEST
 
       It is a dark time for planet Earth. Centuries of greed and conflict have triggered an environmental catastrophe. Oceans rise, deserts spread, and the air grows toxic. Humanity's time is quickly running out.
 
