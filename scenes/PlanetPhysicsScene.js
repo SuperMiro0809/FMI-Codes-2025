@@ -1,3 +1,6 @@
+let score = 0;
+let scoreText = "";
+
 class PlanetPhysicsScene extends Phaser.Scene {
   constructor() {
     super({ key: "PlanetPhysicsScene" });
@@ -20,10 +23,22 @@ class PlanetPhysicsScene extends Phaser.Scene {
     // Scale it to fit the canvas (if necessary)
     bg.setDisplaySize(window.innerWidth, window.innerHeight);
     this.player = this.physics.add.sprite(window.innerWidth / 2, 100, "player");
-    this.player.setSize(10, 32);
-    this.player.setOffset(7, 0);
+    this.player.setSize(60, 62);
     this.player.setScale(0.5);
     this.player.setCollideWorldBounds(true); // Stops at screen edges
+
+    this.item = this.physics.add.sprite(window.innerWidth / 2, 500, "item");
+    this.item.setSize(20, 32);
+
+    this.item.setScale(0.7);
+
+    this.physics.add.overlap(
+      this.player,
+      this.item,
+      this.collectItem,
+      null,
+      this
+    );
 
     this.cursors = this.input.keyboard.createCursorKeys();
   }
@@ -34,6 +49,17 @@ class PlanetPhysicsScene extends Phaser.Scene {
       this.player.setVelocityY(-160);
     } else if (this.cursors.down.isDown) {
       this.player.setVelocityY(160);
+    } else if (this.cursors.right.isDown) {
+      this.player.setVelocityX(160);
+    } else if (this.cursors.left.isDown) {
+      this.player.setVelocityX(-160);
     }
+  }
+  // Function to collect coins
+  collectItem(player, coin) {
+    coin.disableBody(true, true); // Hide the coin
+    score += 10; // Increase score
+    scoreText = "Score: " + score; // Update score display
+    console.log("SCORE UPP=" + score);
   }
 }
