@@ -226,6 +226,24 @@ class PlanetTechnologyScene extends Phaser.Scene {
       this.updateOccupiedCells();
       startDot.connected = true;
       endDot.connected = true;
+
+      if (this.checkIfWin()) {
+        this.add.text(this.scale.width / 2, this.scale.height / 2, 'You Win!', {
+          fontSize: '32px',
+          fontFamily: 'Orbitron',
+          fill: '#00ff88',
+          backgroundColor: '#222222',
+          padding: { x: 20, y: 10 }
+        }).setOrigin(0.5).setDepth(1000); // Center the text and bring it to the top layer
+
+        // Wait for 2 seconds before fading out
+        this.time.delayedCall(2000, () => {
+          this.cameras.main.fadeOut(500, 0, 0, 0);
+          this.time.delayedCall(500, () => {
+            this.scene.start('MenuScene');
+          });
+        });
+      }
     } else {
       this.resetPath();
     }
@@ -276,6 +294,14 @@ class PlanetTechnologyScene extends Phaser.Scene {
     this.previewLines.forEach(line => line.destroy());
     this.previewLines = [];
     this.hoverSquare.setAlpha(0);
+  }
+
+  checkIfWin() {
+    for (const dot of this.dots) {
+      if (!dot.connected) return false;
+    }
+
+    return true;
   }
 
   showPopup() {
