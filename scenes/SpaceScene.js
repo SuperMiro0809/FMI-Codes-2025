@@ -9,6 +9,8 @@ const spaceConfig = {
   asteroidImages: 4,
   asteroidSpawnOffset: 300,
   spawnInterval: 1000, // in miliseconds
+  planetSpeed: 100,
+  planetOffset: 100,
 };
 
 let asteroidImageIndex = 1;
@@ -25,6 +27,12 @@ class SpaceScene extends Phaser.Scene {
     this.load.image("asteroid2", "assets/asteroid2.png");
     this.load.image("asteroid3", "assets/asteroid3.png");
     this.load.image("asteroid4", "assets/asteroid4.png");
+    this.load.image("Earth", "assets/earth/image.png")
+
+    this.load.spritesheet('earth', 'assets/earth/spritesheet.png', {
+        frameWidth: 100,
+        frameHeight: 100
+    });
   }
 
   create() {
@@ -40,12 +48,26 @@ class SpaceScene extends Phaser.Scene {
       .setScrollFactor(0);
 
     this.spaceship = this.physics.add
-      .sprite(100, this.game.config.height / 2, "spaceship")
+      .sprite(500, this.game.config.height / 2, "spaceship")
       .setOrigin(0.5)
       .setRotation(Math.PI / 2)
       .setScale(spaceshipConfig.spaceshipScale);
     this.spaceship.setCollideWorldBounds(true);
     this.spaceship.setBodySize(this.spaceship.width * 0.8, this.spaceship.height * 0.8)
+
+    this.leftPlanet = this.physics.add.sprite(-spaceConfig.planetOffset, this.game.config.height/2, "Earth")
+    this.leftPlanet.setVelocity(-spaceConfig.planetSpeed, 0);
+
+    // this.anims.create({
+    //     key: 'planetAnim',
+    //     frames: this.anims.generateFrameNumbers('earth', { start: 0, end: 60 }), // Adjust based on frame count
+    //     frameRate: 10,
+    //     repeat: -1
+    // });
+
+    // this.planet = this.add.sprite(-100, 300, 'earth');
+    // this.planet.setScale(10); // Make it bigger
+    // this.planet.play('planetAnim'); // Play animation
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -85,6 +107,7 @@ class SpaceScene extends Phaser.Scene {
     } else {
       this.spaceship.setVelocityX(0);
     }
+
   }
 
   spawnAsteroid() {
