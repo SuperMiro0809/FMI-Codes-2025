@@ -18,7 +18,7 @@ class PlanetGeologyScene extends Phaser.Scene {
     const playerY = this.player.y + 16;
     const tileX = Math.floor((playerX - this.startX) / tileSize);
     const tileY = Math.floor((playerY - this.startY) / tileSize) + 1;
-    console.log(tileY);
+		
 		if (tileX >= 0 && tileX < this.groundXLength && tileY >= 0 && tileY < this.groundYLength) {
         const tileIndex = tileX * this.groundYLength + tileY;
         return tileIndex;
@@ -54,7 +54,7 @@ class PlanetGeologyScene extends Phaser.Scene {
 		
 		this.physics.add.collider(this.player, this.ground);
 		this.player.setCollideWorldBounds(true);
-		this.player.setBounce(0.2);
+		// this.player.setBounce(0.2);
 		this.player.setGravityY(300);
     // Add animations
     this.anims.create({
@@ -108,35 +108,53 @@ class PlanetGeologyScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-		if (this.cursors.right.isDown) {
-			// console.log(this.getTilePlayerIsOn());
-      this.player.anims.play('run_right', true);
+    let tilePlayer = this.getTilePlayerIsOn();
+
+    // Moving Right
+    if (this.cursors.right.isDown) {
+			if (tilePlayer % this.groundYLength == 0 || !this.isTileActive(tilePlayer + this.groundYLength - 1)) {
+				this.player.anims.play('run_right', true);
+			} else {
+				this.player.anims.play('mine_right', true);
+				this.handleMining(this.cursors.right, tilePlayer + this.groundYLength - 1);
+			}
 			this.player.setVelocityX(playerSpeed);
-			if(this.player.x > window.innerWidth / 2 + worldWidth / 2){
+			if (this.player.x > window.innerWidth / 2 + worldWidth / 2) {
 				this.player.setVelocityX(0);
 			}
     } else if (this.cursors.left.isDown) {
-			// console.log(this.getTilePlayerIsOn());
-      this.player.anims.play('run_left', true);
+			if (tilePlayer % this.groundYLength == 0 || !this.isTileActive(tilePlayer - this.groundYLength - 1)) {
+				this.player.anims.play('run_left', true);
+			} else {
+				this.player.anims.play('mine_left', true);
+				this.handleMining(this.cursors.left, tilePlayer - this.groundYLength - 1);
+			}
 			this.player.setVelocityX(-playerSpeed);
-			
-			if(this.player.x < window.innerWidth / 2 - worldWidth / 2){
+			if (this.player.x < window.innerWidth / 2 - worldWidth / 2) {
 				this.player.setVelocityX(0);
 			}
-    } else if(this.cursors.down.isDown){
+    } else if (this.cursors.down.isDown) {
 			this.player.anims.play('mine_down', true);
-			// press for at least 100ms
-			if(this.cursors.down.getDuration() > 750){
-				const tileIndex = this.getTilePlayerIsOn();
-				if(tileIndex != null){
-					this.removeTile(tileIndex);
-					this.cursors.down.reset();
-				}
-			}
-		} else {
-      this.player.anims.play('idle', true); 
+			this.handleMining(this.cursors.down, tilePlayer);
+        
+    } else {
+			this.player.anims.play('idle', true);
 			this.player.setVelocityX(0);
     }
-  }
+	}
+
+	isTileActive(index) {
+		return this.ground.children.entries[index] && this.ground.children.entries[index].active;
+	}
+
+	handleMining(key, tileIndex) {
+		if (Phaser.Input.Keyboard.JustDown(key)) {
+				key.mineStartTime = this.time.now; 
+		}
+		if (this.time.now - key.mineStartTime > 750) {
+				this.removeTile(tileIndex);
+				key.mineStartTime = this.time.now; 
+		}
+	}
 
 }
