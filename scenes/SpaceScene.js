@@ -1,83 +1,134 @@
 const spaceshipConfig = {
-    speed:200,
-    spaceshipScale:0.8
-}
+  speed: 200,
+  spaceshipScale: 0.8,
+};
 
 const spaceConfig = {
-    asteroidSpeed:100,
-    asteroidScale:2,
-    asteroidImages:4,
-    asteroidSpawnOffset:300,
-    spawnInterval: 1000, // in miliseconds
-}
+  asteroidSpeed: 100,
+  asteroidScale: 2,
+  asteroidImages: 4,
+  asteroidSpawnOffset: 300,
+  spawnInterval: 1000, // in miliseconds
+};
 
 let asteroidImageIndex = 1;
 
 class SpaceScene extends Phaser.Scene {
   constructor() {
-      super({ key: 'SpaceScene' });
+    super({ key: "SpaceScene" });
   }
 
   preload() {
-      this.load.image('space-background', 'assets/space-background.jpg');
-      this.load.image('spaceship', 'assets/spaceship.png');
-      this.load.image('asteroid1', 'assets/asteroid1.png');
-      this.load.image('asteroid2', 'assets/asteroid2.png');
-      this.load.image('asteroid3', 'assets/asteroid3.png');
-      this.load.image('asteroid4', 'assets/asteroid4.png');
+    this.load.image("space-background", "assets/space-background.jpg");
+    this.load.image("spaceship", "assets/spaceship.png");
+    this.load.image("asteroid1", "assets/asteroid1.png");
+    this.load.image("asteroid2", "assets/asteroid2.png");
+    this.load.image("asteroid3", "assets/asteroid3.png");
+    this.load.image("asteroid4", "assets/asteroid4.png");
   }
 
   create() {
-      this.bg = this.add.tileSprite(0, 0, this.game.config.width, this.game.config.height, 'space-background')
-          .setOrigin(0, 0)
-          .setScrollFactor(0);
- 
-      this.spaceship = this.physics.add.sprite(100, this.game.config.height / 2, 'spaceship').setOrigin(0.5).setRotation(Math.PI/2).setScale(spaceshipConfig.spaceshipScale);
-      this.spaceship.setCollideWorldBounds(true);
+    this.bg = this.add
+      .tileSprite(
+        0,
+        0,
+        this.game.config.width,
+        this.game.config.height,
+        "space-background"
+      )
+      .setOrigin(0, 0)
+      .setScrollFactor(0);
 
-      this.cursors = this.input.keyboard.createCursorKeys();
+    this.spaceship = this.physics.add
+      .sprite(100, this.game.config.height / 2, "spaceship")
+      .setOrigin(0.5)
+      .setRotation(Math.PI / 2)
+      .setScale(spaceshipConfig.spaceshipScale);
+    this.spaceship.setCollideWorldBounds(true);
+    this.spaceship.setBodySize(this.spaceship.width * 0.8, this.spaceship.height * 0.8)
 
-      this.asteroids = this.physics.add.group();
+    this.cursors = this.input.keyboard.createCursorKeys();
 
-        this.time.addEvent({
-            delay: spaceConfig.spawnInterval,
-            callback: this.spawnAsteroid,
-            callbackScope: this,
-            loop: true
-        });
+    this.asteroids = this.physics.add.group();
+
+    this.time.addEvent({
+      delay: spaceConfig.spawnInterval,
+      callback: this.spawnAsteroid,
+      callbackScope: this,
+      loop: true,
+    });
+
+    this.physics.add.collider(
+      this.spaceship,
+      this.asteroids,
+      this.hitAsteroid,
+      null,
+      this
+    );
   }
 
   update() {
-      this.bg.tilePositionX += 2;
+    this.bg.tilePositionX += 2;
 
-      if (this.cursors.up.isDown) {
-        this.spaceship.setVelocityY(-spaceshipConfig.speed);
+    if (this.cursors.up.isDown) {
+      this.spaceship.setVelocityY(-spaceshipConfig.speed);
     } else if (this.cursors.down.isDown) {
-        this.spaceship.setVelocityY(spaceshipConfig.speed);
+      this.spaceship.setVelocityY(spaceshipConfig.speed);
     } else {
-        this.spaceship.setVelocityY(0);
+      this.spaceship.setVelocityY(0);
     }
 
     if (this.cursors.left.isDown) {
-        this.spaceship.setVelocityX(-spaceshipConfig.speed);
+      this.spaceship.setVelocityX(-spaceshipConfig.speed);
     } else if (this.cursors.right.isDown) {
-        this.spaceship.setVelocityX(spaceshipConfig.speed);
+      this.spaceship.setVelocityX(spaceshipConfig.speed);
     } else {
-        this.spaceship.setVelocityX(0);
+      this.spaceship.setVelocityX(0);
     }
   }
 
   spawnAsteroid() {
     let spawnY = Phaser.Math.Between(0, 1) === 0 ? 0 : this.game.config.height;
-    let asteroid = this.asteroids.create(spaceConfig.asteroidSpawnOffset + Phaser.Math.Between(0,this.game.config.width - spaceConfig.asteroidSpawnOffset), spawnY, `asteroid${asteroidImageIndex}`);
-    asteroidImageIndex = asteroidImageIndex == spaceConfig.asteroidImages? 1 : asteroidImageIndex+1
+    let asteroid = this.asteroids.create(
+      spaceConfig.asteroidSpawnOffset +
+        Phaser.Math.Between(
+          0,
+          this.game.config.width - spaceConfig.asteroidSpawnOffset
+        ),
+      spawnY,
+      `asteroid${asteroidImageIndex}`
+    );
+    asteroidImageIndex =
+      asteroidImageIndex == spaceConfig.asteroidImages
+        ? 1
+        : asteroidImageIndex + 1;
 
-    asteroid.setVelocity(-spaceConfig.asteroidSpeed, spawnY === 0 ? spaceConfig.asteroidSpeed : -spaceConfig.asteroidSpeed);
+    asteroid.setVelocity(
+      -spaceConfig.asteroidSpeed,
+      spawnY === 0 ? spaceConfig.asteroidSpeed : -spaceConfig.asteroidSpeed
+    );
     asteroid.setScale(spaceConfig.asteroidScale);
     asteroid.setCollideWorldBounds(false);
 
-    this.time.delayedCall(this.game.config.width/spaceConfig.asteroidSpeed*1000, () => {
+    asteroid.setBodySize(asteroid.width * 0.4, asteroid.height * 0.4);
+    // asteroid.setOffset(asteroid.width * 0.2, asteroid.height * 0.2); 
+
+    this.time.delayedCall(
+      (this.game.config.width / spaceConfig.asteroidSpeed) * 1000,
+      () => {
         asteroid.destroy();
+      }
+    );
+  }
+  hitAsteroid(spaceship, asteroid) {
+    // Stop movement
+    spaceship.setVelocity(0);
+    spaceship.setTint(0xff0000); // Flash red
+    this.physics.pause(); // Stop the game
+
+    // Restart game after 2 seconds
+    this.time.delayedCall(2000, () => {
+      this.scene.restart();
     });
-}
+  }
 }

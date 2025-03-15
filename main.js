@@ -7,7 +7,7 @@ const config = {
     height: window.innerHeight
   },
   backgroundColor: '#242424',
-  physics: { default: 'arcade' },
+  physics: { default: 'arcade', arcade:{debug:true} },
   scene: [MenuScene, PlanetChemistryScene, PlanetTechnologyScene, SpaceScene]
 };
 
