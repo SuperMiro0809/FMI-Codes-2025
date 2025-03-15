@@ -53,9 +53,14 @@ class PlanetPhysicsScene extends Phaser.Scene {
   update() {
     // Move up
     if (this.cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-160 * this.inventory);
+      console.log("Minava prez skachane");
+      this.player.setVelocityY(-this.gravity * this.inventory);
     } else if (this.cursors.down.isDown) {
-      this.player.setVelocityY(160 * this.inventory);
+      this.player.setVelocityY(this.gravity * this.inventory);
+    } else if (this.cursors.right.isDown) {
+      this.player.setVelocityX(160);
+    } else if (this.cursors.left.isDown) {
+      this.player.setVelocityX(-160);
     }
     this.scoreText.setPosition(this.player.x, this.player.y - 30);
   }
@@ -64,7 +69,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
     coin.disableBody(true, true); // Hide the coin
     this.inventory = coin.value; // Increase score
     this.scoreText.setText("Score:" + this.inventory);
-    let newGravity = gravity * this.inventory; // Adjust gravity
+    let newGravity = this.gravity * this.inventory; // Adjust gravity
     this.physics.world.gravity.y = newGravity;
     console.log("Gravity=" + this.physics.world.gravity.y);
     console.log("SCORE UPP=" + this.inventory);
