@@ -4,22 +4,22 @@ class MenuScene extends Phaser.Scene {
   }
 
   preload() {
-    // load background image clearly here
     this.load.image('space-bg', 'assets/space-background.jpg');
   }
 
   create() {
-    // Adding fullscreen background
+    // full screen background
     const bg = this.add.image(this.scale.width / 2, this.scale.height / 2, 'space-bg');
     const scaleX = this.scale.width / bg.width;
     const scaleY = this.scale.height / bg.height;
     bg.setScale(scaleX, scaleY);
 
-    // Title text clearly visible on background
-    this.add.text(this.scale.width / 2, 350, 'Space Conquer 2', { fontSize: '100px', fontFamily: 'Luxomona', fill: '#FFBF00' })
+    const titleText = this.add.text(this.scale.width / 2, 350, 'Space Conquer 2', { fontSize: '100px', fontFamily: 'Luxomona' })
       .setOrigin(0.5);
 
-    // Styled interactive Start button
+    this.titleText = titleText;
+    this.gradientShift = 0;
+
     const startBtn = this.add.text(this.scale.width / 2, 500, '▶️ Start Exploring', {
         fontSize: '42px',
         fontFamily: 'Orbitron',
@@ -31,7 +31,7 @@ class MenuScene extends Phaser.Scene {
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true });
 
-    // Hover effect (scale)
+    // hover effect (scale)
     startBtn.on('pointerover', () => {
       startBtn.setScale(1.1);
     });
@@ -40,9 +40,31 @@ class MenuScene extends Phaser.Scene {
       startBtn.setScale(1.0);
     });
 
-    // Scene switcher logic
+    // scene switcher
     startBtn.on('pointerdown', () => {
       this.scene.start('PlanetChemistryScene');
     });
   }
+
+  update(time, delta) {
+    this.gradientShift += delta * 0.2; // speed of animation
+
+    if (this.gradientShift > this.titleText.width) {
+        this.gradientShift = 0;
+    }
+
+    const gradient = this.titleText.context.createLinearGradient(
+        this.gradientShift, 0,
+        this.gradientShift + this.titleText.width, 0
+    );
+
+    gradient.addColorStop(0, '#FFBF00');  // amber
+    gradient.addColorStop(0.3, '#FFEA00'); // gold
+    gradient.addColorStop(1, '#FFBF00');  // amber again
+
+    this.titleText.setFill(gradient);
+
+    // refresh text to show changes
+    this.titleText.setText(this.titleText.text);
+}
 }
