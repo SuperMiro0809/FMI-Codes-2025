@@ -12,9 +12,10 @@ class PlanetChemistryScene extends Phaser.Scene {
   constructor() {
     super({ key: 'PlanetChemistryScene' });
     this.menus = [];
-    this.menuOptions = globalMenuOptionPairs.map(pair => pair.answer);
+    this.menuOptions = globalMenuOptionPairs.map(pair => pair.answer)
+    .sort(() => Math.random() - 0.5);
     this.selectedOptions = {};
-  }
+  } 
 
   preload() {
     this.load.image('background', 'assets/chemistryPlanet3.JPG');
@@ -108,8 +109,8 @@ class PlanetChemistryScene extends Phaser.Scene {
   handleSubmit() {
     if (this.checkCorrectSubmission()) {
       this.showPopup("Correct! Proceeding to the next planet...");
-      this.cameras.main.fadeOut(2000);
-      this.time.delayedCall(5000, () => this.scene.start('PlanetTechnologyScene'));
+      this.cameras.main.fadeOut(1500);
+      this.time.delayedCall(4000, () => this.scene.start('PlanetTechnologyScene'));
     } else if (this.nothingIsSelected()) {
       this.showPopup("You have not selected an answer for every element!");
     } else {
@@ -138,8 +139,9 @@ class PlanetChemistryScene extends Phaser.Scene {
       let optionText = this.add.text(menu.x, menu.y + 30 + (i * 20), 
         isSelectedInMenu ? `(•) ${option}` : `( ) ${option}`, {
           fontSize: '16px',
-          fill: isSelectedGlobally ? '#f00' : '#fff', 
-          backgroundColor: '#555'
+          fill: isSelectedGlobally ? '#8585ad' : '#0a0a0f', 
+        backgroundColor: '#b3b3cb',
+        
         })
       .setPadding(5)
       .setInteractive()
