@@ -77,5 +77,41 @@ class IntroductionScene extends Phaser.Scene {
       music.stop();
       this.scene.start('PlanetChemistryScene');
     });
+
+    const skipBtn = this.add.text(this.scale.width - 20, this.scale.height - 20, 'SKIP →', {
+      fontFamily: 'Orbitron, sans-serif',
+      fontSize: '32px',
+      fill: '#ffffff',
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      padding: { x: 8, y: 5 }
+    }).setOrigin(1, 1).setInteractive({ useHandCursor: true });
+
+    skipBtn.on('pointerover', () => {
+      this.tweens.add({
+        targets: skipBtn,
+        scale: 1.2,
+        duration: 200,
+        ease: 'Power2'
+      });
+      skipBtn.setStyle({ fill: '#FFFF00' });
+    });
+
+    skipBtn.on('pointerout', () => {
+      this.tweens.add({
+        targets: skipBtn,
+        scale: 1.0,
+        duration: 200,
+        ease: 'Power2'
+      });
+      skipBtn.setStyle({ fill: '#FFFFFF' });
+    });
+
+    skipBtn.on('pointerdown', () => {
+      this.cameras.main.fadeOut(500, 0, 0, 0);
+      this.time.delayedCall(500, () => {
+        music.stop();
+        this.scene.start('PlanetChemistryScene');
+      });
+    });
   }
 }
