@@ -12,6 +12,7 @@ const config = {
     MenuScene,
     PlanetChemistryScene,
     PlanetTechnologyScene,
+    IntroductionScene,
     PlanetPhysicsScene,
   ],
 };
