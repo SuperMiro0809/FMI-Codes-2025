@@ -110,7 +110,7 @@ class IntroductionScene extends Phaser.Scene {
       this.cameras.main.fadeOut(500, 0, 0, 0);
       this.time.delayedCall(500, () => {
         music.stop();
-        this.scene.start('PlanetChemistryScene');
+        this.scene.start('PlanetTechnologyScene');
       });
     });
   }
