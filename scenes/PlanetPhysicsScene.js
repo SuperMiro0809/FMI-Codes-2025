@@ -4,6 +4,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.score = 0;
     this.scoreText = "";
     this.inventory = 1;
+    this.gravity = 160;
   }
 
   preload() {
@@ -16,9 +17,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.cameras.main.fadeIn(1000);
 
     this.physics.world.setBounds(0, 0, 800, 600);
-    this.add
-      .text(50, 50, "Planet 4", { fontSize: "32px", fill: "#ffffff" })
-      .setOrigin(0.5);
     let bg = this.add.image(400, 300, "bg");
 
     // Create a static ground for collision detection
@@ -30,7 +28,9 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.player = this.physics.add.sprite(window.innerWidth / 2, 100, "player");
     this.player.setSize(60, 62);
     this.player.setScale(0.5);
-    this.player.setCollideWorldBounds(true); // Stops at screen edges
+    this.player.setCollideWorldBounds(true);
+
+    this.physics.add.collider(this.player, this.ground);
 
     this.scoreText = this.add
       .text(this.player.x, this.player.y - 10, "", {
@@ -47,14 +47,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
       this.physics.add.overlap(this.player, coin, this.collectItem, null, this);
     }
 
-    // this.physics.add.overlap(
-    //   this.player,
-    //   this.coins,
-    //   this.collectItem,
-    //   null,
-    //   this
-    // );
-
     this.cursors = this.input.keyboard.createCursorKeys();
   }
 
@@ -64,10 +56,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
       this.player.setVelocityY(-160 * this.inventory);
     } else if (this.cursors.down.isDown) {
       this.player.setVelocityY(160 * this.inventory);
-    } else if (this.cursors.right.isDown) {
-      this.player.setVelocityX(160);
-    } else if (this.cursors.left.isDown) {
-      this.player.setVelocityX(-160);
     }
     this.scoreText.setPosition(this.player.x, this.player.y - 30);
   }
@@ -76,7 +64,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
     coin.disableBody(true, true); // Hide the coin
     this.inventory = coin.value; // Increase score
     this.scoreText.setText("Score:" + this.inventory);
-    let newGravity = 160 * this.inventory; // Adjust gravity
+    let newGravity = gravity * this.inventory; // Adjust gravity
     this.physics.world.gravity.y = newGravity;
     console.log("Gravity=" + this.physics.world.gravity.y);
     console.log("SCORE UPP=" + this.inventory);
