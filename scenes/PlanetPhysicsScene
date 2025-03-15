@@ -1,0 +1,118 @@
+class PlanetPhysicsScene extends Phaser.Scene {
+  constructor() {
+    super({ key: "PlanetPhysicsScene" });
+    this.score = 0;
+    this.scoreText = "";
+    this.inventory = 1;
+    this.gravity = 160;
+  }
+
+  preload() {
+    // this.load.image("bg", "assets/background.png");
+    this.load.image("player", "assets/tile_stone.png");
+    this.load.image("item", "assets/tile.png");
+  }
+
+  create() {
+    this.cameras.main.fadeIn(1000);
+    // let bg = this.add.image(400, 300, "bg");
+
+    // bg.setDisplaySize(window.innerWidth, window.innerHeight);
+		this.tileSize = 32;
+		this.cameraSpeed = 3;
+		this.platforms = this.physics.add.staticGroup();
+		this.maxRows = innerHeight / this.tileSize;
+		this.maxCols = innerWidth / this.tileSize;
+	
+		this.addGround(this.maxRows - 1);
+		this.addGround(0);
+		this.addRandomPlatfors();
+
+    this.player = this.physics.add.sprite(250, 100, "player");
+		this.physics.add.collider(this.player, this.platforms);
+
+    this.scoreText = this.add
+      .text(this.player.x, this.player.y - 10, "", {
+        fontSize: "32px",
+        fill: "#ffffff",
+      })
+      .setOrigin(0.5);
+
+    // this.coins = this.physics.add.group();
+    // for (let i = 0; i < 3; i++) {
+    //   let coin = this.coins.create(200 + i * 200, 500, "item");
+    //   coin.value = Phaser.Math.FloatBetween(0, 1);
+    //   coin.value = parseFloat(coin.value.toFixed(2));
+    //   this.physics.add.overlap(this.player, coin, this.collectItem, null, this);
+    // }
+
+    this.cursors = this.input.keyboard.createCursorKeys();
+  }
+	addRandomPlatfors() {		
+		for(let i = 1; i < 10; i++) {
+			this.addPlatform(window.innerWidth / tileSize + i * 3, Math.floor(Math.random() * (this.maxRows - 1  -6)) + 3, Math.floor(Math.random() * 3) + 3);
+		}
+	}
+	
+	addGround(y) {
+		let numGaps = Math.floor(Math.random() * 3) + 1;
+		let pos = [];
+		for (let i = 0; i < numGaps; i++) {
+			pos[i] = Math.floor(Math.random() * this.maxCols);
+			for(let j = 0; j < i; j++) {
+				if (Math.abs(pos[j] - pos[i]) < 5) {
+					pos.pop();
+					i--;
+					break;
+				}
+			}
+		}
+		
+		for(let i = 0;i < this.maxCols; i++) {
+			//check if there is a gap nearby
+			let isGap = false;
+			for(let j = 0; j < numGaps; j++) {
+				if (Math.abs(i - pos[j]) < Math.floor(Math.random() * 2) + 2) {
+					isGap = true;
+					break;
+				}
+			}
+			if (!isGap) {
+				this.addPlatform(i, y, 1);
+			}
+		}
+
+
+	}
+	addPlatform(x, y, width) {
+		for (let i = 0; i < width; i++) {
+			this.platforms.create(16 + (x + i) * this.tileSize, 16 + y * this.tileSize, 'platform');
+		}
+	}
+
+  update() {
+		let time = 0;
+		time ++;
+		if(time % 100 == 0) {
+			this.platforms.create();
+		}
+		this.platforms.children.iterate((child) => {
+			child.x -= this.cameraSpeed;
+		});
+
+    // Move up
+    if (this.cursors.up.isDown ) {
+      this.player.setVelocityY(-160 * this.inventory);
+    } else if (this.cursors.down.isDown) {
+      this.player.setVelocityY(160 * this.inventory);
+    }
+    this.scoreText.setPosition(this.player.x, this.player.y - 30);
+  }
+  // collectItem(player, coin) {
+  //   coin.disableBody(true, true); 
+  //   this.inventory = coin.value; 
+  //   this.scoreText.setText("Score:" + this.inventory);
+  //   let newGravity = this.gravity * this.inventory;
+  //   this.physics.world.gravity.y = newGravity;
+  // }
+}
