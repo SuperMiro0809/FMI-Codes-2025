@@ -5,7 +5,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 
   create() {
     this.add
-      .text(400, 50, "Planet 4", { fontSize: "32px", fill: "#ffffff" })
+      .text(400, 50, "Planet 5", { fontSize: "32px", fill: "#ffffff" })
       .setOrigin(0.5);
     // Example content here
 
