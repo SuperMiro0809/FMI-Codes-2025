@@ -8,17 +8,12 @@ class PlanetTechnologyScene extends Phaser.Scene {
   }
 
   create() {
-    // Full-screen background
     const bg = this.add.image(this.scale.width / 2, this.scale.height / 2, 'tech-planet-bg');
     const scaleX = this.scale.width / bg.width;
     const scaleY = this.scale.height / bg.height;
     bg.setScale(scaleX, scaleY);
 
-    // Create popup but keep it hidden initially
     this.createPopup();
-
-    // Open popup when pressing 'M' key
-    // this.input.keyboard.on('keydown-M', () => this.showPopup());
     this.showPopup();
   }
 
@@ -61,9 +56,9 @@ class PlanetTechnologyScene extends Phaser.Scene {
 
     let positions = [];
 
-    // Center the grid inside the popup
+    // center the grid inside the popup
     let gridOffsetX = -this.gridSize * this.cellSize / 2;
-    let gridOffsetY = -this.gridSize * this.cellSize / 2 + 20; // Shift down slightly
+    let gridOffsetY = -this.gridSize * this.cellSize / 2 + 20;
 
     for (let row = 0; row < this.gridSize; row++) {
       this.grid[row] = [];
