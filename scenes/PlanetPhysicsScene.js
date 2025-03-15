@@ -2,17 +2,11 @@ class PlanetPhysicsScene extends Phaser.Scene {
   constructor() {
     super({ key: "PlanetPhysicsScene" });
     this.score = 0;
-<<<<<<< HEAD
-    this.scoreText = "";
-    this.inventory = 1;
-    this.gravity = 160;
-=======
     this.inventory = 1;
     this.gravity = 160;
     this.tileSize = 32;
     this.cameraSpeed = 3;
     this.lastGeneratedX = 0; // Track the last generated platform position
->>>>>>> b55564f76aa972c465e7944e2ad7064c3635040a
   }
  
   preload() {
@@ -22,25 +16,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
  
   create() {
     this.cameras.main.fadeIn(1000);
-<<<<<<< HEAD
-
-    this.physics.world.setBounds(0, 0, 800, 600);
-    let bg = this.add.image(400, 300, "bg");
-
-    // Create a static ground for collision detection
-    this.ground = this.physics.add.staticGroup();
-    this.ground.create(400, 580, "ground").setScale(2).refreshBody(); // Ground at the bottom of the screen
-
-    // Scale it to fit the canvas (if necessary)
-    bg.setDisplaySize(window.innerWidth, window.innerHeight);
-    this.player = this.physics.add.sprite(window.innerWidth / 2, 100, "player");
-    this.player.setSize(60, 62);
-    this.player.setScale(0.5);
-    this.player.setCollideWorldBounds(true);
-
-    this.physics.add.collider(this.player, this.ground);
-
-=======
  
     this.maxRows = Math.floor(innerHeight / this.tileSize);
     this.maxCols = Math.floor(innerWidth / this.tileSize);
@@ -64,26 +39,13 @@ class PlanetPhysicsScene extends Phaser.Scene {
     // Add collision detection between player and platforms
     this.physics.add.collider(this.player, this.platforms);
  
->>>>>>> b55564f76aa972c465e7944e2ad7064c3635040a
     this.scoreText = this.add
       .text(this.player.x, this.player.y - 10, "", {
         fontSize: "32px",
         fill: "#ffffff",
       })
       .setOrigin(0.5);
-<<<<<<< HEAD
-
-    this.coins = this.physics.add.group();
-    for (let i = 0; i < 3; i++) {
-      let coin = this.coins.create(200 + i * 200, 500, "item");
-      coin.value = Phaser.Math.FloatBetween(0, 1);
-      coin.value = parseFloat(coin.value.toFixed(2));
-      this.physics.add.overlap(this.player, coin, this.collectItem, null, this);
-    }
-
-=======
  
->>>>>>> b55564f76aa972c465e7944e2ad7064c3635040a
     this.cursors = this.input.keyboard.createCursorKeys();
  
     // Generate platforms every 2 seconds
@@ -91,20 +53,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
       this.addRandomPlatforms();
     }, 2000);
   }
-<<<<<<< HEAD
-
-  update() {
-    // Move up
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
-      console.log("Minava prez skachane");
-      this.player.setVelocityY(-this.gravity * this.inventory);
-    } else if (this.cursors.down.isDown) {
-      this.player.setVelocityY(this.gravity * this.inventory);
-    } else if (this.cursors.right.isDown) {
-      this.player.setVelocityX(160);
-    } else if (this.cursors.left.isDown) {
-      this.player.setVelocityX(-160);
-=======
  
   addRandomPlatforms() {
     for (let i = 1; i < 10; i++) {
@@ -142,19 +90,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
       if (!isGap) {
         this.addPlatform(i, y, 1);
       }
->>>>>>> b55564f76aa972c465e7944e2ad7064c3635040a
     }
-    this.scoreText.setPosition(this.player.x, this.player.y - 30);
-  }
-  // Function to collect coins
-  collectItem(player, coin) {
-    coin.disableBody(true, true); // Hide the coin
-    this.inventory = coin.value; // Increase score
-    this.scoreText.setText("Score:" + this.inventory);
-    let newGravity = this.gravity * this.inventory; // Adjust gravity
-    this.physics.world.gravity.y = newGravity;
-    console.log("Gravity=" + this.physics.world.gravity.y);
-    console.log("SCORE UPP=" + this.inventory);
   }
  
   addPlatform(x, y, width) {
