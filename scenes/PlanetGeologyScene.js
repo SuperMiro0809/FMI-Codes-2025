@@ -156,7 +156,7 @@ class PlanetGeologyScene extends Phaser.Scene {
 
   update() {
 
-		this.time.delayedCall(10000, () => {
+		this.time.delayedCall(12000, () => {
 			this.timer += 1;
 			if(this.timer % 87 == 0 && this.isAlive) {
 				this.updateGrid();
