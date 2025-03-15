@@ -42,7 +42,10 @@ class MenuScene extends Phaser.Scene {
 
     // scene switcher
     startBtn.on('pointerdown', () => {
-      this.scene.start('PlanetChemistryScene');
+      this.cameras.main.fadeOut(500, 0, 0, 0);
+      this.time.delayedCall(500, () => {
+        this.scene.start('IntroductionScene');
+      });
     });
   }
 
