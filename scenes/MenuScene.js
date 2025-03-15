@@ -10,7 +10,7 @@ class MenuScene extends Phaser.Scene {
       .setInteractive();
 
     startBtn.on('pointerdown', () => {
-      this.scene.start('SpaceScene');
+      this.scene.start('SpaceScene', { rightPlanet:"technoPlanet"});
     });
   }
 }

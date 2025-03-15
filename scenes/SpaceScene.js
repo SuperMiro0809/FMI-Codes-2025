@@ -8,10 +8,10 @@ const spaceConfig = {
   asteroidScale: 2,
   asteroidImages: 4,
   asteroidSpawnOffset: 300,
-  spawnInterval: 1000, // in miliseconds
+  spawnInterval: 500, // in miliseconds
   planetSpeed: 100,
   planetOffset: 100,
-  time: 5,
+  time: 20,
   progressBarWidth: 300,
 };
 
@@ -31,14 +31,16 @@ class SpaceScene extends Phaser.Scene {
     this.load.image("asteroid4", "assets/asteroid4.png");
     this.load.image("earth", "assets/earth/image.png")
     this.load.image("technoPlanet", "assets/technoPlanet/image.png")
-
-    // this.load.spritesheet('earth', 'assets/earth/spritesheet.png', {
-    //     frameWidth: 100,
-    //     frameHeight: 100
-    // });
+    this.load.image("physicsPlanet", "assets/physicsPlanet/image.png")
+    this.load.image("chemistryPlanet", "assets/chemistryPlanet/image.png")
   }
+  // example data:
+  // data:{
+  //   leftPlanet: "", optional // earth, technoPlanet, physicsPlanet
+  //   rightPlanet: "", // earth, technoPlanet, physicsPlanet
+  // }
 
-  create() {
+  create(data) {
     this.bg = this.add
       .tileSprite(
         0,
@@ -58,8 +60,13 @@ class SpaceScene extends Phaser.Scene {
     this.spaceship.setCollideWorldBounds(true);
     this.spaceship.setBodySize(this.spaceship.width * 0.8, this.spaceship.height * 0.8)
 
-    this.leftPlanet = this.physics.add.sprite(-spaceConfig.planetOffset, this.game.config.height/2, "earth")
-    this.leftPlanet.setVelocity(-spaceConfig.planetSpeed, 0);
+    if(data.leftPlanet){
+      this.leftPlanet = this.physics.add.sprite(-spaceConfig.planetOffset, this.game.config.height/2, data.leftPlanet)
+      this.leftPlanet.setVelocity(-spaceConfig.planetSpeed, 0);
+      this.time.delayedCall((spaceConfig.planetOffset / spaceConfig.planetSpeed)*5000, () => {
+        this.leftPlanet.destroy();
+      });
+    }
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -84,6 +91,13 @@ class SpaceScene extends Phaser.Scene {
     this.progressBar = this.add.graphics(); 
     this.progressBar.x = this.game.config.width / 4 - spaceConfig.progressBarWidth / 4; 
     this.progressBar.y = 20; 
+
+    this.time.addEvent({
+      delay: spaceConfig.time * 1000,
+      callback: this.spawnRightPlanet,
+      callbackScope: this,
+      args: [data.rightPlanet]
+    });
   }
 
   update(time, delta) {
@@ -161,4 +175,21 @@ class SpaceScene extends Phaser.Scene {
     this.progressBar.fillStyle(0x00ff00);
     this.progressBar.fillRoundedRect(this.progressBar.x, this.progressBar.y, (this.progress / 100) * spaceConfig.progressBarWidth, 10, 5);
 }
+  changeScene(){
+    this.scene.start("MenuScene");
+  }
+  spawnRightPlanet(rightPlanet = "chemistryPlanet"){
+    this.rightPlanet = this.physics.add.sprite(this.game.config.width + 500, this.game.config.height/2, rightPlanet)
+    this.rightPlanet.setVelocity(-spaceConfig.planetSpeed, 0);
+    this.time.delayedCall((spaceConfig.planetOffset / spaceConfig.planetSpeed)*5000, () => {
+      this.rightPlanet.setVelocity(0);
+    });
+    this.physics.add.collider(
+      this.spaceship,
+      this.rightPlanet,
+      this.changeScene,
+      null,
+      this
+    );
+  }
 }
