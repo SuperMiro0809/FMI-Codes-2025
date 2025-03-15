@@ -155,6 +155,7 @@ class PlanetGeologyScene extends Phaser.Scene {
   }
 
   update() {
+
 		this.time.delayedCall(10000, () => {
 			this.timer += 1;
 			if(this.timer % 87 == 0 && this.isAlive) {
@@ -172,7 +173,10 @@ class PlanetGeologyScene extends Phaser.Scene {
     let tilePlayer = this.getTilePlayerIsOn();
 		
     if(this.isAlive) {
-			if (this.cursors.right.isDown) {
+			console.log(this.startX + (this.groundXLength - 1) * tileSize);
+			if (this.cursors.right.isDown && this.player.x < (this.startX + (this.groundXLength - 1) * tileSize)) {
+				console.log(this.player.x);
+				this.player.setVelocityX(playerSpeed);
 				// Check if we can move to the right or need to mine
 				if (tilePlayer < this.groundXLength || !this.isTileActive(tilePlayer + 1 - this.groundXLength)) {
 					// Player moves right
@@ -182,7 +186,7 @@ class PlanetGeologyScene extends Phaser.Scene {
 					this.player.anims.play('mine_right', true);
 					this.handleMining(this.cursors.right, tilePlayer + 1 - this.groundXLength); // Tile to the right
 				}
-			} else if (this.cursors.left.isDown) {
+			} else if (this.cursors.left.isDown  && this.player.x >= this.startX) {
 					// Check if we can move to the left or need to mine
 					if (tilePlayer < this.groundXLength || !this.isTileActive(tilePlayer - 1 - this.groundXLength)) {
 							// Player moves left
@@ -193,7 +197,7 @@ class PlanetGeologyScene extends Phaser.Scene {
 							this.handleMining(this.cursors.left, tilePlayer - 1 - this.groundXLength); // Tile to the left
 					}
 					this.player.setVelocityX(-playerSpeed);
-			} else if (this.cursors.down.isDown) {
+			} else if (this.cursors.down.isDown ) {
 					// Player mines downward
 					this.player.anims.play('mine_down', true);
 					this.handleMining(this.cursors.down, tilePlayer); // Current tile
