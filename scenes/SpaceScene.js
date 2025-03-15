@@ -11,6 +11,8 @@ const spaceConfig = {
   spawnInterval: 1000, // in miliseconds
   planetSpeed: 100,
   planetOffset: 100,
+  time: 5,
+  progressBarWidth: 300,
 };
 
 let asteroidImageIndex = 1;
@@ -27,12 +29,13 @@ class SpaceScene extends Phaser.Scene {
     this.load.image("asteroid2", "assets/asteroid2.png");
     this.load.image("asteroid3", "assets/asteroid3.png");
     this.load.image("asteroid4", "assets/asteroid4.png");
-    this.load.image("Earth", "assets/earth/image.png")
+    this.load.image("earth", "assets/earth/image.png")
+    this.load.image("technoPlanet", "assets/technoPlanet/image.png")
 
-    this.load.spritesheet('earth', 'assets/earth/spritesheet.png', {
-        frameWidth: 100,
-        frameHeight: 100
-    });
+    // this.load.spritesheet('earth', 'assets/earth/spritesheet.png', {
+    //     frameWidth: 100,
+    //     frameHeight: 100
+    // });
   }
 
   create() {
@@ -55,7 +58,7 @@ class SpaceScene extends Phaser.Scene {
     this.spaceship.setCollideWorldBounds(true);
     this.spaceship.setBodySize(this.spaceship.width * 0.8, this.spaceship.height * 0.8)
 
-    this.leftPlanet = this.physics.add.sprite(-spaceConfig.planetOffset, this.game.config.height/2, "Earth")
+    this.leftPlanet = this.physics.add.sprite(-spaceConfig.planetOffset, this.game.config.height/2, "earth")
     this.leftPlanet.setVelocity(-spaceConfig.planetSpeed, 0);
 
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -76,9 +79,14 @@ class SpaceScene extends Phaser.Scene {
       null,
       this
     );
+
+    this.progress = 0;
+    this.progressBar = this.add.graphics(); 
+    this.progressBar.x = this.game.config.width / 4 - spaceConfig.progressBarWidth / 4; 
+    this.progressBar.y = 20; 
   }
 
-  update() {
+  update(time, delta) {
     this.bg.tilePositionX += 2;
 
     if (this.cursors.up.isDown) {
@@ -97,6 +105,10 @@ class SpaceScene extends Phaser.Scene {
       this.spaceship.setVelocityX(0);
     }
 
+    let progressPerFrame = (100 / (spaceConfig.time * 1000)) * delta;
+    this.progress += progressPerFrame;
+    if (this.progress > 100) this.progress = 100;
+    this.drawProgressBar();
   }
 
   spawnAsteroid() {
@@ -140,4 +152,13 @@ class SpaceScene extends Phaser.Scene {
       this.scene.restart();
     });
   }
+  drawProgressBar() {
+    this.progressBar.clear();
+
+    this.progressBar.fillStyle(0x444444);
+    this.progressBar.fillRoundedRect(this.progressBar.x, this.progressBar.y, spaceConfig.progressBarWidth, 10, 5);
+
+    this.progressBar.fillStyle(0x00ff00);
+    this.progressBar.fillRoundedRect(this.progressBar.x, this.progressBar.y, (this.progress / 100) * spaceConfig.progressBarWidth, 10, 5);
+}
 }
