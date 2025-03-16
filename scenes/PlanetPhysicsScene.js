@@ -7,6 +7,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.tileSize = 32;
     this.cameraSpeed = 3;
     this.lastGeneratedX = 0; // Track the last generated platform position
+    this.jumpStrength;
   }
 
   preload() {
@@ -16,7 +17,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.fadeIn(1000);
-		this.texts = [];
+    this.texts = [];
     this.maxRows = Math.floor(innerHeight / this.tileSize);
     this.maxCols = Math.floor(innerWidth / this.tileSize);
 
@@ -31,15 +32,23 @@ class PlanetPhysicsScene extends Phaser.Scene {
       immovable: true, // Item should not move when collided
     });
 
-    this.addGround(this.maxRows - 1);
-    this.addGround(0);
-    this.addRandomPlatforms();
-
     // Create player
     this.player = this.physics.add.sprite(250, 100, "player");
     this.player.setCollideWorldBounds(true); // Prevent player from falling out of the world
     this.player.setGravityY(this.gravity); // Set gravity
     this.player.setPushable(true);
+
+    this.jumpStrength = this.add
+      .text(this.player.x, this.player.y - 36, "", {
+        fontSize: "25px",
+        fill: "#ffffff",
+      })
+      .setOrigin(0.5);
+    this.jumpStrength.setDepth(10);
+
+    this.addGround(this.maxRows - 1);
+    this.addGround(0);
+    this.addRandomPlatforms();
 
     this.physics.add.collider(this.player, this.platforms);
 
@@ -52,12 +61,23 @@ class PlanetPhysicsScene extends Phaser.Scene {
     }, 8000);
   }
 
-  // Function to collect coins
+  // Function to collect items
   collectItem(player, item) {
-    item.disableBody(true, true); // Hide the coin
-    this.inventory = item.value; // Increase score
-    this.scoreText.setText("Jump Strength:" + this.inventory * 100 + "%");
+    item.disableBody(true, true); // Hide the item
+    this.inventory = item.value; // Increase jump strength
+    this.jumpStrength.setText("Jump Strength:" + this.inventory * 100 + "%");
     let newGravity = this.gravity * this.inventory; // Adjust gravity
+    console.log(item.id);
+    console.log(this.texts.filter((text) => text.id == item.id));
+    this.texts.forEach((text, index) => {
+      if (text.id === item.id) {
+        // Destroy the Phaser sprite object from the scene
+        text.destroy();
+
+        // Remove the item from the array
+        this.texts.splice(index, 1);
+      }
+    });
     this.physics.world.gravity.y = newGravity;
     console.log("Gravity=" + this.physics.world.gravity.y);
     console.log("SCORE UPP=" + this.inventory);
@@ -102,6 +122,18 @@ class PlanetPhysicsScene extends Phaser.Scene {
     }
   }
 
+  generateID(length = 8) {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let result = "";
+    for (let i = 0; i < length; i++) {
+      result += characters.charAt(
+        Math.floor(Math.random() * characters.length)
+      );
+    }
+    return result;
+  }
+
   addPlatform(x, y, width) {
     let platform;
     for (let i = 0; i < width; i++) {
@@ -115,20 +147,23 @@ class PlanetPhysicsScene extends Phaser.Scene {
       platform.setImmovable(true);
     }
     if (Phaser.Math.FloatBetween(0, 1) > 0.9) {
+      const id = this.generateID();
       let item = this.items.create(platform.x, platform.y - 30, "item");
+      item.id = id;
       item.setData("platform", platform);
-			
+
       item.value = Phaser.Math.FloatBetween(0.5, 1);
       item.value = parseFloat(item.value.toFixed(2));
-			let scoreText = this.add
-			.text(item.x, item.y - 36, item.value, {
-				fontSize: "25px",
-				fill: "#ffffff",
-			})
-			.setOrigin(0.5);
-		scoreText.setDepth(10);
-		this.texts.push(scoreText);
-		console.log(scoreText);
+      let scoreText = this.add
+        .text(item.x, item.y - 36, item.value, {
+          fontSize: "25px",
+          fill: "#ffffff",
+        })
+        .setOrigin(0.5);
+      scoreText.value = scoreText.setDepth(10);
+      scoreText.id = id;
+      this.texts.push(scoreText);
+      console.log(scoreText);
 
       if (this.player && item) {
         this.physics.add.overlap(
@@ -170,9 +205,9 @@ class PlanetPhysicsScene extends Phaser.Scene {
         }
       }
     });
-		this.texts.forEach((text) => {
-			text.x -= this.cameraSpeed;
-		});
+    this.texts.forEach((text) => {
+      text.x -= this.cameraSpeed;
+    });
     this.items.children.iterate((item) => {
       if (item) {
         let platform = item.getData("platform");
