@@ -36,7 +36,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 	
 		this.bc = this.add.image(window.innerWidth, window.innerHeight, 'background').setOrigin(1, 1);
 		this.bc.setDisplaySize(window.innerWidth, window.innerHeight);
-		
+		this.time = 0;
     this.cameras.main.fadeIn(1000);
 		this.texts = [];
     this.isAlive = true;
@@ -63,7 +63,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 			this.player.setSize(26, 30);
 			this.player.setPushable(true);
 			
-			this.addPlatform(0, 0, this.maxCols + 1);
+			this.addPlatform(0, 0, this.maxCols + 1, false);
 			this.addGround(this.maxRows - 1);
 			// this.addGround(0);
 			this.addRandomPlatforms();
@@ -91,7 +91,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 			// Generate platforms every 2 seconds
 
 			setInterval(() => {
-				this.addPlatform(this.maxCols, 0, 1);
+				this.addPlatform(this.maxCols, 0, 1, false);
 			}, 150);
 			setInterval(() => {
 				this.addRandomPlatforms();
@@ -153,7 +153,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 				}
 				if (!isGap) {
 					if(isFirst) {
-						this.addPlatform(i, y, 1); 
+						this.addPlatform(i, y, 1, false); 
 					} else {
 						this.addPlatform(i + this.maxCols + 1, y, 1);
 
@@ -174,7 +174,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
     return result;
   }
 
-		addPlatform(x, y, width) {
+		addPlatform(x, y, width, canAddItems = true) {
 			let platform;
 			for (let i = 0; i < width; i++) {
 				platform = this.platforms.create(
@@ -186,7 +186,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 				platform.setData("destroyed", false);
 				platform.setImmovable(true);
 			}
-			if (Phaser.Math.FloatBetween(0, 1) > 0.9) {
+			if (Phaser.Math.FloatBetween(0, 1) > 0.9 && canAddItems) {
       	const id = this.generateID();
 				let item = this.items.create(platform.x, platform.y - 30, "item", 58);
 				//scale
