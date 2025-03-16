@@ -179,7 +179,11 @@ class SpaceScene extends Phaser.Scene {
     this.progressBar.fillRoundedRect(this.progressBar.x, this.progressBar.y, (this.progress / 100) * spaceConfig.progressBarWidth, 10, 5);
 }
   changeScene(){
-    this.scene.start("PregameAnimation", {planet: this.destination});
+    if(this.destination!="earth"){
+      this.scene.start("PregameAnimation", {planet: this.destination});
+    }else{
+      this.scene.start("CrawlScene");
+    }
   }
   spawnRightPlanet(rightPlanet = "chemistryPlanet"){
     this.rightPlanet = this.physics.add.sprite(this.game.config.width + 500, this.game.config.height/2, rightPlanet)

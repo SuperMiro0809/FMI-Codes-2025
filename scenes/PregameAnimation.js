@@ -14,22 +14,17 @@ class PregameAnimation extends Phaser.Scene {
     });
   }
 
-<<<<<<< HEAD
   create(data) {
-      const { width, height } = this.sys.game.canvas;
-
-      this.currentPlanet = data.planet;
-      const backImage = this.add.image(width / 2, height / 2, 'backImage').setOrigin(0.5);
-      const bgScale = Math.max(width / backImage.width, height / backImage.height);
-      backImage.setScale(bgScale).setScrollFactor(0);
-=======
-  create() {
     const { width, height } = this.sys.game.canvas;
+    this.planet = data.planet;
+    console.log(this.planet);
+    if(this.planet == "technoPlanet"){
+        
+    }
 
     const backImage = this.add.image(width / 2, height / 2, 'backImage').setOrigin(0.5);
     const bgScale = Math.max(width / backImage.width, height / backImage.height);
     backImage.setScale(bgScale).setScrollFactor(0);
->>>>>>> e8db12f09e22a00b0f3a74717a8586edb6871678
 
     this.avatar = this.physics.add.sprite(250, -100, 'avatar').setOrigin(0.5);
     this.avatar.setScale(2.5);
@@ -39,24 +34,31 @@ class PregameAnimation extends Phaser.Scene {
     this.alien.setFlipX(true);
 
     const button = this.add.rectangle(this.game.config.width - 150, this.game.config.height - 50, 150, 50, 0x007bff)
-      .setInteractive();
+    .setInteractive();
 
-    const buttonText = this.add.text(this.game.config.width - 150, this.game.config.height - 50, 'Next', {
-      fontSize: '20px',
-      color: '#ffffff',
-    }).setOrigin(0.5);
+  const buttonText = this.add.text(this.game.config.width - 150, this.game.config.height - 50, 'Skip', {
+    fontSize: '20px',
+    color: '#ffffff',
+  }).setOrigin(0.5);
 
-    button.on('pointerdown', () => {
-      this.buttonClicked(); // Call the function properly
-    });
+  button.on('pointerdown', () => {
+    this.buttonClicked(); // Call the function properly
+  });
 
+
+  this.anims.create({
+    key: 'walk',
+    frames: this.anims.generateFrameNumbers('character', { start: 0, end: 3 }),
+    frameRate: 8,
+    repeat: -1
+  });
 
     this.anims.create({
-      key: 'walk',
-      frames: this.anims.generateFrameNumbers('character', { start: 0, end: 3 }),
-      frameRate: 8,
-      repeat: -1
-    });
+          key: 'walk',
+          frames: this.anims.generateFrameNumbers('character', { start: 0, end: 3 }),
+          frameRate: 8,
+          repeat: -1
+      });
 
     this.tweens.add({
       targets: this.avatar,
@@ -84,21 +86,32 @@ class PregameAnimation extends Phaser.Scene {
       ease: 'Linear',
       onComplete: () => {
         this.character.play('walk');
-        this.createSpeechBubble(this.alien.x, this.alien.y - 110, "Almost there!");
+        let texts = ["Hello there", "its me"]
+        if(this.planet == "technoPlanet"){
+            texts = [
+                "Organic lifeform! Assist—wires disconnected, energy fading!",
+                "Emergency! Circuit links severed—restore before system collapse!",
+                "Power core unstable! Reconnect conduits to prevent meltdown!",
+                "Signal disruption detected! Repair cables for continued communication!",
+                "Vital flow interrupted! Link circuits or planetary grid will fail!",
+                "Urgent! Techno-sphere integrity at risk—synchronize wiring now!"
+              ]             
+        }
+        this.createSpeechBubble(this.alien.x, this.alien.y - 110, texts);
       }
     });
   }
 
-  createSpeechBubble(x, y, text) {
-
+  createSpeechBubble(x, y, texts) {
     const bubbleWidth = 220;
     const bubbleHeight = 80;
     const padding = 10;
     const pointerSize = 10;
+    let textIndex = 0;
 
     if (this.currentBubble) {
-      this.currentBubble.destroy();
-      this.currentText.destroy();
+        this.currentBubble.destroy();
+        this.currentText.destroy();
     }
 
     this.currentBubble = this.add.graphics();
@@ -108,18 +121,36 @@ class PregameAnimation extends Phaser.Scene {
     this.currentBubble.strokeRoundedRect(x - bubbleWidth / 2, y - bubbleHeight / 2, bubbleWidth, bubbleHeight, 16);
 
     this.currentBubble.fillTriangle(
-      x - 10, y + bubbleHeight / 2 - 5,
-      x + 10, y + bubbleHeight / 2 - 5,
-      x, y + bubbleHeight / 2 + pointerSize
+        x - 10, y + bubbleHeight / 2 - 5,
+        x + 10, y + bubbleHeight / 2 - 5,
+        x, y + bubbleHeight / 2 + pointerSize
     );
 
-    this.currentText = this.add.text(x, y, text, {
-      fontSize: '14px',
-      color: '#0a0a0f',
-      align: 'center',
-      fontFamily: 'Arial',
-      wordWrap: { width: bubbleWidth - padding * 2 }
+    this.currentText = this.add.text(x, y, texts[textIndex], {
+        fontSize: '14px',
+        color: '#0a0a0f',
+        align: 'center',
+        fontFamily: 'Arial',
+        wordWrap: { width: bubbleWidth - padding * 2 }
     }).setOrigin(0.5);
 
-  }
+    this.time.addEvent({
+        delay: 2000,
+        callback: () => {
+            if(textIndex == texts.length - 1){
+                if(this.planet == "technoPlanet"){
+                    this.scene.start("PlanetTechnologyScene");
+                }else if(this.planet == ""){
+
+                }else{
+                    this.scene.start("MenuScene")
+                }
+            }
+            textIndex = (textIndex + 1) % texts.length;
+            this.currentText.setText(texts[textIndex]);
+        },
+        loop: true
+    });
+}
+
 }
