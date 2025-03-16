@@ -4,7 +4,7 @@ class PregameAnimation extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('backImage', 'assets/planet-background.png');
+    this.load.image('geologyBackImage', 'assets/geologyPlanet/background.jpg');
     this.load.image('avatar', 'assets/spaceship.png');
     this.load.image('geologyAlien', 'assets/aliens/dark-gray.png');
     this.load.image('technologyAlien', 'assets/aliens/masked.png');
@@ -20,17 +20,20 @@ class PregameAnimation extends Phaser.Scene {
     this.planet = data.planet;
 
     let alienAsset = '';
+    let planetBackground = '';
 
     switch (this.planet) {
       case 'geologyPlanet':
         alienAsset = 'geologyAlien';
+        planetBackground = 'geologyBackImage';
         break;
       case 'technoPlanet':
         alienAsset = 'technologyAlien';
+        planetBackground = 'geologyBackImage';
         break;
     }
 
-    const backImage = this.add.image(width / 2, height / 2, 'backImage').setOrigin(0.5);
+    const backImage = this.add.image(width / 2, height / 2, planetBackground).setOrigin(0.5);
     const bgScale = Math.max(width / backImage.width, height / backImage.height);
     backImage.setScale(bgScale).setScrollFactor(0);
 

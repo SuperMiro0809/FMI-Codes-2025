@@ -4,9 +4,11 @@ class LeavingScene extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image('backImage', 'assets/planet-background.png');
+    this.load.image('geologyBackImage', 'assets/geologyPlanet/background.jpg');
     this.load.image('avatar', 'assets/spaceship.png'); 
     this.load.image('alien', 'assets/aliens/blue.png');
+    this.load.image('geologyAlien', 'assets/aliens/dark-gray.png');
+    this.load.image('technologyAlien', 'assets/aliens/masked.png');
     
     this.load.spritesheet('character', 'assets/AstronautPlayerProfile.png', {
       frameWidth: 32, 
@@ -16,15 +18,30 @@ class LeavingScene extends Phaser.Scene {
 
   create(data) {
     const { width, height } = this.sys.game.canvas;
+    const planet = data.from;
 
-    const backImage = this.add.image(width / 2, height / 2, 'backImage').setOrigin(0.5);
+    let alienAsset = '';
+    let planetBackground = '';
+
+    switch (planet) {
+      case 'geologyPlanet':
+        alienAsset = 'geologyAlien';
+        planetBackground = 'geologyBackImage';
+        break;
+      case 'technoPlanet':
+        alienAsset = 'technologyAlien';
+        planetBackground = 'geologyBackImage';
+        break;
+    }
+
+    const backImage = this.add.image(width / 2, height / 2, planetBackground).setOrigin(0.5);
     const bgScale = Math.max(width / backImage.width, height / backImage.height);
     backImage.setScale(bgScale).setScrollFactor(0);
 
     this.avatar = this.physics.add.sprite(this.game.config.width - 250, height / 1.4, 'avatar').setOrigin(0.5);
     this.avatar.setScale(2.2); 
 
-    this.alien = this.physics.add.sprite(300, height / 1.25, 'alien').setOrigin(0.5);
+    this.alien = this.physics.add.sprite(300, height / 1.25, alienAsset).setOrigin(0.5);
     this.alien.setScale(0.3);
 
     this.character = this.physics.add.sprite(300, height / 1.2, 'character').setOrigin(0.5);
