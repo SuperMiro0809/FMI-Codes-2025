@@ -47,7 +47,7 @@ class PregameAnimation extends Phaser.Scene {
 
     const skipBtn = this.add.text(this.scale.width - 20, this.scale.height - 20, 'SKIP →', {
       fontFamily: 'Orbitron, sans-serif',
-      fontSize: '32px',
+      fontSize: '2rem',
       fill: '#ffffff',
       backgroundColor: 'rgba(0,0,0,0.5)',
       padding: { x: 8, y: 5 }
@@ -174,7 +174,7 @@ class PregameAnimation extends Phaser.Scene {
     );
 
     this.currentText = this.add.text(x, y, texts[textIndex], {
-      fontSize: '18px',
+      fontSize: '1.125rem',
       color: '#0a0a0f',
       align: 'center',
       fontFamily: 'Orbitron',

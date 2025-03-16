@@ -26,7 +26,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
     const popupBg = this.add.rectangle(0, 0, 720, 860, 0x222222).setStrokeStyle(3, 0xffffff);
     const popupTitle = this.add.text(-290, -380, 'Connect the Cables', {
       fontFamily: 'Orbitron',
-      fontSize: '26px',
+      fontSize: '1.625rem',
       fill: '#FFBF00',
     });
 
@@ -38,12 +38,12 @@ class PlanetTechnologyScene extends Phaser.Scene {
 
     const popupText = this.add.text(-320, -350, instructionsText, {
       fontFamily: 'Orbitron',
-      fontSize: '20px',
+      fontSize: '1.25rem',
       fill: '#ffffff',
     });
 
     const resetButton = this.add.text(180, 370, '[RESET]', {
-      fontSize: '20px',
+      fontSize: '1.25rem',
       fontFamily: 'Orbitron',
       fill: '#ff0000',
       backgroundColor: '#333333',
@@ -229,7 +229,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
 
       if (this.checkIfWin()) {
         this.add.text(this.scale.width / 2, this.scale.height / 2, 'You Win!', {
-          fontSize: '32px',
+          fontSize: '2rem',
           fontFamily: 'Orbitron',
           fill: '#00ff88',
           backgroundColor: '#222222',

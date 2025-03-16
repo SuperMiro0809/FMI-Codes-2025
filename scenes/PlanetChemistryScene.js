@@ -41,7 +41,7 @@ class PlanetChemistryScene extends Phaser.Scene {
     const startY = height - 200;
 
     this.add.text(width / 2, 130, 'Alchemy', { 
-      fontSize: '60px', 
+      fontSize: '3.75rem', 
       fill: '#0a0a0f', 
       fontStyle: 'bold' 
     }).setOrigin(0.5);
@@ -50,7 +50,7 @@ class PlanetChemistryScene extends Phaser.Scene {
       const currentX = startX + i * spacingX;
 
       let factText = this.add.text(currentX, startY - 210, globalMenuOptionPairs[i].fact, {
-        fontSize: '25px',
+        fontSize: '1.563rem',
         fill: '#0a0a0f',
         backgroundColor: '#b3b3cb',
         wordWrap: { width: 400, useAdvancedWrap: true }
@@ -68,7 +68,7 @@ class PlanetChemistryScene extends Phaser.Scene {
       flaskImage.on('pointerout', () => factText.setAlpha(0));
 
       let menu = this.add.text(currentX, startY, 'options', {
-        fontSize: '20px',
+        fontSize: '1.25rem',
         fill: '#0a0a0f',
         backgroundColor: '#b3b3cb'
       })
@@ -84,7 +84,7 @@ class PlanetChemistryScene extends Phaser.Scene {
     }
 
     const submitBtn = this.add.text(width - 100, height - 50, 'Submit', {
-      fontSize: '40px',
+      fontSize: '2.5rem',
       fill: '#b3b3cb',
       backgroundColor: '#0a0a0f'
     })
@@ -138,7 +138,7 @@ class PlanetChemistryScene extends Phaser.Scene {
 
       let optionText = this.add.text(menu.x, menu.y + 30 + (i * 20), 
         isSelectedInMenu ? `(•) ${option}` : `( ) ${option}`, {
-          fontSize: '16px',
+          fontSize: '1rem',
           fill: isSelectedGlobally ? '#8585ad' : '#0a0a0f', 
         backgroundColor: '#b3b3cb',
         
@@ -180,7 +180,7 @@ class PlanetChemistryScene extends Phaser.Scene {
 
   showPopup(message) {
     const popup = this.add.text(this.scale.width / 2, this.scale.height / 2, message, {
-      fontSize: '18px', 
+      fontSize: '1.125rem', 
       fill: '#b3b3cb', 
       backgroundColor: '#0a0a0f'
     }).setPadding(15).setOrigin(0.5).setDepth(100);
