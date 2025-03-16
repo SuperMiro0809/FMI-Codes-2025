@@ -18,6 +18,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
   create() {
     this.cameras.main.fadeIn(1000);
     this.texts = [];
+    this.isAlive = true;
     this.maxRows = Math.floor(innerHeight / this.tileSize);
     this.maxCols = Math.floor(innerWidth / this.tileSize);
 
@@ -34,7 +35,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 
     // Create player
     this.player = this.physics.add.sprite(250, 100, "player");
-    this.player.setCollideWorldBounds(true); // Prevent player from falling out of the world
+    // this.player.setCollideWorldBounds(true); // Prevent player from falling out of the world
     this.player.setGravityY(this.gravity); // Set gravity
     this.player.setPushable(true);
 
@@ -67,8 +68,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.inventory = item.value; // Increase jump strength
     this.jumpStrength.setText("Jump Strength:" + this.inventory * 100 + "%");
     let newGravity = this.gravity * this.inventory; // Adjust gravity
-    console.log(item.id);
-    console.log(this.texts.filter((text) => text.id == item.id));
     this.texts.forEach((text, index) => {
       if (text.id === item.id) {
         // Destroy the Phaser sprite object from the scene
@@ -152,7 +151,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
       item.id = id;
       item.setData("platform", platform);
 
-      item.value = Phaser.Math.FloatBetween(0.5, 1);
+      item.value = Phaser.Math.FloatBetween(0.7, 1);
       item.value = parseFloat(item.value.toFixed(2));
       let scoreText = this.add
         .text(item.x, item.y - 36, item.value, {
@@ -178,59 +177,85 @@ class PlanetPhysicsScene extends Phaser.Scene {
   }
 
   update() {
-    this.platforms.children.iterate((platform) => {
-      if (!platform) return;
+    if (this.player.x < 0 || this.player.y > window.innerHeight) {
+      // loose
+      this.isAlive = false;
 
-      const playerBounds = this.player.getBounds();
-      const platformBounds = platform.getBounds();
+      this.jumpStrength.destroy();
 
-      if (
-        playerBounds.right > platformBounds.left && // Player's right side is past platform's left
-        playerBounds.left < platformBounds.left + 5 && // Ensures it's a left collision
-        playerBounds.bottom > platformBounds.top && // Player is within platform's vertical range
-        playerBounds.top < platformBounds.bottom
-      ) {
-        this.player.setVelocityX(0);
-        this.player.x = platformBounds.left - playerBounds.width / 2;
-      }
-    });
+      this.add
+        .text(this.scale.width / 2, this.scale.height / 2, "You Lost!", {
+          fontSize: "32px",
+          fontFamily: "Orbitron",
+          fill: "#ff0000",
+          backgroundColor: "#222222",
+          padding: { x: 20, y: 10 },
+        })
+        .setOrigin(0.5)
+        .setDepth(1000)
+        .setScrollFactor(0);
 
-    this.platforms.children.iterate((child) => {
-      if (child) {
-        child.x -= this.cameraSpeed; // Move platforms left
+      this.time.delayedCall(2000, () => {
+        this.cameras.main.fadeOut(1000, 0, 0, 0);
+        this.scene.restart();
+      });
+    }
+    if (this.isAlive) {
+      this.platforms.children.iterate((platform) => {
+        if (!platform) return;
 
-        // Remove platforms that go off-screen
-        if (child.x < -this.tileSize) {
-          this.platforms.remove(child, true, true); // Remove from physics group and destroy
+        const playerBounds = this.player.getBounds();
+        const platformBounds = platform.getBounds();
+
+        if (
+          playerBounds.right > platformBounds.left && // Player's right side is past platform's left
+          playerBounds.left < platformBounds.left + 5 && // Ensures it's a left collision
+          playerBounds.bottom > platformBounds.top && // Player is within platform's vertical range
+          playerBounds.top < platformBounds.bottom
+        ) {
+          this.player.setVelocityX(0);
+          this.player.x = platformBounds.left - playerBounds.width / 2;
         }
-      }
-    });
-    this.texts.forEach((text) => {
-      text.x -= this.cameraSpeed;
-    });
-    this.items.children.iterate((item) => {
-      if (item) {
-        let platform = item.getData("platform");
-        if (platform) {
-          item.x = platform.x; // Keep item aligned with platform
-        }
-        item.x -= this.cameraSpeed; // Move item left
-        // Remove items that go off-screen
-        if (item.x < -this.tileSize) {
-          this.items.remove(item, true, true);
-        }
-      }
-    });
+      });
 
-    // Player movement
-    if (this.cursors.up.isDown && this.player.body.touching.down) {
-      this.player.setVelocityY(-this.gravity * this.inventory);
-    } else if (this.cursors.down.isDown) {
-      this.player.setVelocityY(this.gravity * this.inventory);
-    } else if (this.cursors.right.isDown) {
-      this.player.setVelocityX(this.gravity);
-    } else if (this.cursors.left.isDown) {
-      this.player.setVelocityX(-this.gravity);
+      this.platforms.children.iterate((child) => {
+        if (child) {
+          child.x -= this.cameraSpeed; // Move platforms left
+
+          // Remove platforms that go off-screen
+          if (child.x < -this.tileSize) {
+            this.platforms.remove(child, true, true); // Remove from physics group and destroy
+          }
+        }
+      });
+      this.texts.forEach((text) => {
+        text.x -= this.cameraSpeed;
+      });
+      this.items.children.iterate((item) => {
+        if (item) {
+          let platform = item.getData("platform");
+          if (platform) {
+            item.x = platform.x; // Keep item aligned with platform
+          }
+          item.x -= this.cameraSpeed; // Move item left
+          // Remove items that go off-screen
+          if (item.x < -this.tileSize) {
+            this.items.remove(item, true, true);
+          }
+        }
+      });
+
+      // Player movement
+      if (this.cursors.up.isDown && this.player.body.touching.down) {
+        this.player.setVelocityY(-this.gravity * this.inventory);
+      } else if (this.cursors.down.isDown) {
+        this.player.setVelocityY(this.gravity * this.inventory);
+      } else if (this.cursors.right.isDown) {
+        this.player.setVelocityX(this.gravity);
+      } else if (this.cursors.left.isDown) {
+        this.player.setVelocityX(-this.gravity);
+      }
+      this.jumpStrength.setPosition(this.player.x, this.player.y - 36);
     }
   }
 }
