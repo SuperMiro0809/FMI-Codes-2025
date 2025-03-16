@@ -241,7 +241,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
           this.cameras.main.fadeOut(500, 0, 0, 0);
 
           this.time.delayedCall(500, () => {
-            this.scene.start('LeavingScene', {from: "technoPlanet", to:"earth"});
+            this.scene.start('LeavingScene', {from: "technoPlanet", to:"physicsPlanet"});
           });
         });
       }
