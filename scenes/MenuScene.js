@@ -42,9 +42,6 @@ class MenuScene extends Phaser.Scene {
 
     // scene switcher
     startBtn.on('pointerdown', () => {
-      this.scene.start('PregameAnimation');
-      // toReturnto CrawlScene
-    });
       // this.scene.start('SpaceScene', { rightPlanet:"technoPlanet"});
       this.cameras.main.fadeOut(500, 0, 0, 0);
       this.time.delayedCall(500, () => {
