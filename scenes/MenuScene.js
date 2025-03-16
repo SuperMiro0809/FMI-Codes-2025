@@ -21,13 +21,13 @@ class MenuScene extends Phaser.Scene {
     this.gradientShift = 0;
 
     const startBtn = this.add.text(this.scale.width / 2, 500, '▶️ Start Exploring', {
-        fontSize: '42px',
-        fontFamily: 'Orbitron',
-        fill: '#00ff88',
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        padding: { x: 10, y: 8 },
-        borderRadius: '8px'
-      })
+      fontSize: '42px',
+      fontFamily: 'Orbitron',
+      fill: '#00ff88',
+      backgroundColor: 'rgba(0,0,0,0.5)',
+      padding: { x: 10, y: 8 },
+      borderRadius: '8px'
+    })
       .setOrigin(0.5)
       .setInteractive({ useHandCursor: true });
 
@@ -42,7 +42,7 @@ class MenuScene extends Phaser.Scene {
 
     // scene switcher
     startBtn.on('pointerdown', () => {
-     // this.scene.start('SpaceScene', { rightPlanet:"technoPlanet"});
+      // this.scene.start('SpaceScene', { rightPlanet:"technoPlanet"});
       this.cameras.main.fadeOut(500, 0, 0, 0);
       this.time.delayedCall(500, () => {
         this.scene.start('IntroductionScene');
@@ -54,12 +54,12 @@ class MenuScene extends Phaser.Scene {
     this.gradientShift += delta * 0.2; // speed of animation
 
     if (this.gradientShift > this.titleText.width) {
-        this.gradientShift = 0;
+      this.gradientShift = 0;
     }
 
     const gradient = this.titleText.context.createLinearGradient(
-        this.gradientShift, 0,
-        this.gradientShift + this.titleText.width, 0
+      this.gradientShift, 0,
+      this.gradientShift + this.titleText.width, 0
     );
 
     gradient.addColorStop(0, '#FFBF00');  // amber
@@ -70,5 +70,5 @@ class MenuScene extends Phaser.Scene {
 
     // refresh text to show changes
     this.titleText.setText(this.titleText.text);
-}
+  }
 }
