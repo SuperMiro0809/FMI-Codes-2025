@@ -8,7 +8,7 @@ const config = {
   },
   backgroundColor: '#242424',
   physics: { default: 'arcade' },
-  scene: [MenuScene,PregameAnimation, PlanetTechnologyScene,CrawlScene]
+  scene: [MenuScene, IntroductionScene,PregameAnimation, PlanetTechnologyScene,CrawlScene, SpaceScene, LeavingScene]
 };
 
 const game = new Phaser.Game(config);
