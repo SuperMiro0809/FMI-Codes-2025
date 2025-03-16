@@ -6,6 +6,7 @@ class LeavingScene extends Phaser.Scene {
   preload() {
     this.load.image('geologyBackImage', 'assets/geologyPlanet/background.jpg');
     this.load.image('teachnoBackImage', 'assets/technoPlanet/background.png');
+    this.load.image('physicsBackImage', 'assets/physicsPlanet/background.png');    
     this.load.image('avatar', 'assets/spaceship.png'); 
     this.load.image("physicsAlien", "assets/aliens/blue.png");
     this.load.image('geologyAlien', 'assets/aliens/dark-gray.png');
@@ -35,11 +36,8 @@ class LeavingScene extends Phaser.Scene {
         break;
       case 'physicsPlanet':
         alienAsset = 'physicsAlien'
-        planetBackground = 'geologyBackImage';
+        planetBackground = 'physicsBackImage';
         break;
-      case 'physicsPlanet':
-        alienAsset = 'physicsAlien'
-        planetBackground = 'geologyBackImage';
     }
 
     const backImage = this.add.image(width / 2, height / 2, planetBackground).setOrigin(0.5);
