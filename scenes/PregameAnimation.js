@@ -17,10 +17,6 @@ class PregameAnimation extends Phaser.Scene {
   create(data) {
     const { width, height } = this.sys.game.canvas;
     this.planet = data.planet;
-    console.log(this.planet);
-    if(this.planet == "technoPlanet"){
-        
-    }
 
     const backImage = this.add.image(width / 2, height / 2, 'backImage').setOrigin(0.5);
     const bgScale = Math.max(width / backImage.width, height / backImage.height);
@@ -75,7 +71,13 @@ class PregameAnimation extends Phaser.Scene {
   }
 
   buttonClicked(){
-    this.scene.start('SpaceScene');
+    if(this.planet == "technoPlanet"){
+        this.scene.start("PlanetTechnologyScene");
+    }else if(this.planet == "geologyPlanet"){
+        this.scene.start("PlanetGeologyScene");
+    }else{
+        this.scene.start("MenuScene")
+    }
   }
 
   startCharacterWalk() {
@@ -96,6 +98,16 @@ class PregameAnimation extends Phaser.Scene {
                 "Vital flow interrupted! Link circuits or planetary grid will fail!",
                 "Urgent! Techno-sphere integrity at risk—synchronize wiring now!"
               ]             
+        }else if(this.planet == "geologyPlanet"){
+            texts = [
+                "Terra-being! Bring the sacred ore—immediately!",
+                "Planet unstable! Deliver the rare stone now!",
+                "Core failing! One primal mineral required!",
+                "Seismic crisis! Find and bring the special ore!",
+                "Geo-grid weak! One crystal rock needed!",
+                "Magmatic flow broken! Retrieve the ancient stone!"
+              ]
+              
         }
         this.createSpeechBubble(this.alien.x, this.alien.y - 110, texts);
       }
@@ -140,8 +152,8 @@ class PregameAnimation extends Phaser.Scene {
             if(textIndex == texts.length - 1){
                 if(this.planet == "technoPlanet"){
                     this.scene.start("PlanetTechnologyScene");
-                }else if(this.planet == ""){
-
+                }else if(this.planet == "geologyPlanet"){
+                    this.scene.start("PlanetGeologyScene");
                 }else{
                     this.scene.start("MenuScene")
                 }

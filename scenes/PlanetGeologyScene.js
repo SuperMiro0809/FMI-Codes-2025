@@ -233,7 +233,8 @@ class PlanetGeologyScene extends Phaser.Scene {
 				
 				if(this.crystalsCount == 5) {
 					//won
-					this.cameras.main.fadeOut(1000);
+					// this.cameras.main.fadeOut(1000);
+					this.scene.start("LeavingScene", {from:"geologyPlanet", to:"technoPlanet"})
 				}
 				this.scoreText.setText("Mined crystals: " + this.crystalsCount);
 			}

@@ -59,7 +59,7 @@ class IntroductionScene extends Phaser.Scene {
       ease: 'Linear',
       onComplete: () => {
         music.stop();
-        this.scene.start('PlanetChemistryScene');
+        this.scene.start('SpaceScene', { rightPlanet: 'geologyPlanet' });
       }
     });
 
@@ -75,7 +75,7 @@ class IntroductionScene extends Phaser.Scene {
 
     this.time.delayedCall(48000, () => {
       music.stop();
-      this.scene.start('PlanetChemistryScene');
+      this.scene.start('SpaceScene', { rightPlanet: 'geologyPlanet' });
     });
 
     const skipBtn = this.add.text(this.scale.width - 20, this.scale.height - 20, 'SKIP →', {
@@ -109,7 +109,7 @@ class IntroductionScene extends Phaser.Scene {
     skipBtn.on('pointerdown', () => {
       this.cameras.main.fadeOut(1500, 0, 0, 0);
       this.fadeOutMusic(() => {
-        this.scene.start('SpaceScene', { rightPlanet: 'technoPlanet' });
+        this.scene.start('SpaceScene', { rightPlanet: 'geologyPlanet' });
       });
     });
   }

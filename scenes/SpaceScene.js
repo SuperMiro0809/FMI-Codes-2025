@@ -32,7 +32,7 @@ class SpaceScene extends Phaser.Scene {
     this.load.image("earth", "assets/earth/image.png")
     this.load.image("technoPlanet", "assets/technoPlanet/image.png")
     this.load.image("physicsPlanet", "assets/physicsPlanet/image.png")
-    this.load.image("chemistryPlanet", "assets/chemistryPlanet/image.png")
+    this.load.image("geologyPlanet", "assets/geologyPlanet/image.png")
   }
   // example data:
   // data:{
