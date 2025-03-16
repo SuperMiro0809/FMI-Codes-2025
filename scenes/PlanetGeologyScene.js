@@ -3,7 +3,7 @@ const worldWidth = 400;
 const worldHeight = window.innerHeight + 500;
 const playerSpeed = 120;
 const changeOfCrystals = 0.1;
-const cameraSpeed = 0.5;
+const cameraSpeed = 0.3;
 const miningTime = 750;
 const changeOfStone = 0.25;
 
@@ -153,7 +153,7 @@ class PlanetGeologyScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    this.time.delayedCall(13000, () => {
+    this.time.delayedCall(14000, () => {
       if (this.isAlive) {
         this.timer += 1;
         if (this.timer % 87 == 0) {
