@@ -7,7 +7,7 @@ const spaceConfig = {
   asteroidSpeed: 100,
   asteroidScale: 2,
   asteroidImages: 4,
-  asteroidSpawnOffset: 300,
+  asteroidSpawnOffset: 500,
   spawnInterval: 500, // in miliseconds
   planetSpeed: 100,
   planetOffset: 100,
@@ -131,10 +131,9 @@ class SpaceScene extends Phaser.Scene {
   spawnAsteroid() {
     let spawnY = Phaser.Math.Between(0, 1) === 0 ? 0 : this.game.config.height;
     let asteroid = this.asteroids.create(
-      spaceConfig.asteroidSpawnOffset +
         Phaser.Math.Between(
           0,
-          this.game.config.width - spaceConfig.asteroidSpawnOffset
+          this.game.config.width + spaceConfig.asteroidSpawnOffset
         ),
       spawnY,
       `asteroid${asteroidImageIndex}`
