@@ -1,6 +1,6 @@
 class MenuScene extends Phaser.Scene {
   constructor() {
-    super({ key: 'MenuScene' });
+    super({ key: "MenuScene" });
   }
 
   preload() {
@@ -44,7 +44,12 @@ class MenuScene extends Phaser.Scene {
     startBtn.on('pointerdown', () => {
       this.cameras.main.fadeOut(500, 0, 0, 0);
       this.time.delayedCall(500, () => {
+<<<<<<< HEAD
       this.scene.start('IntroductionScene');
+=======
+        this.scene.start('IntroductionScene');
+        // this.scene.start("SpaceScene", {leftPlanet:"technoPlanet", rightPlanet:"physicsPlanet"})
+>>>>>>> 6f056f8de0e2cc72dc1101f1a6297d86380a6504
       });
     });
   }

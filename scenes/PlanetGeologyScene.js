@@ -11,6 +11,7 @@ class PlanetGeologyScene extends Phaser.Scene {
   constructor() {
     super({ key: 'PlanetGeologyScene' });
   }
+
   preload() {
     this.cameras.main.fadeIn(500, 0, 0, 0);
     this.load.spritesheet('player', 'assets/miner.png', { frameWidth: 32, frameHeight: 32 });
@@ -130,6 +131,7 @@ class PlanetGeologyScene extends Phaser.Scene {
     // Add keys for input
     this.cursors = this.input.keyboard.createCursorKeys();
   }
+
   updateGrid() {
     let firstRowY = this.startY;
     let firstRowTiles = this.ground.getChildren().filter(tile => {
