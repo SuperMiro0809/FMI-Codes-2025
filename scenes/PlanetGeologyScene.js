@@ -3,7 +3,7 @@ const worldWidth = 400;
 const worldHeight = window.innerHeight + 500;
 const playerSpeed = 120;
 const changeOfCrystals = 0.1;
-const cameraSpeed = 0.3;
+const cameraSpeed = 0.5;
 const miningTime = 750;
 const changeOfStone = 0.25;
 
@@ -75,7 +75,6 @@ class PlanetGeologyScene extends Phaser.Scene {
     }
 
     this.physics.add.collider(this.player, this.ground);
-    this.player.setCollideWorldBounds(true);
     this.player.setGravityY(300);
 
     this.scoreText = this.add.text(35, 35, "Mined crystals: " + this.crystalsCount, {
@@ -243,7 +242,7 @@ class PlanetGeologyScene extends Phaser.Scene {
             fill: '#00ff88',
             backgroundColor: '#222222',
             padding: { x: 20, y: 10 }
-          }).setOrigin(0.5).setDepth(1000); // Center the text and bring it to the top layer
+          }).setOrigin(0.5).setDepth(1000).setScrollFactor(0);
 
           // Wait for 2 seconds before fading out
           this.time.delayedCall(2000, () => {
@@ -262,5 +261,4 @@ class PlanetGeologyScene extends Phaser.Scene {
       }
     }
   }
-
 }
