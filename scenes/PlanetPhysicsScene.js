@@ -12,19 +12,19 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.neededItemToCollect = 5;
   }
 
-		preload() {
-			this.load.image("background", "assets/physicsBackground.jpg");
-			this.load.spritesheet('item', 'assets/PotionsPack2.png', {
-				frameWidth: 32,
-				frameHeight: 32
-			});
-			//load spritesheet for the player
-			this.load.spritesheet('player', 'assets/Astronaut Player.png', {
-				frameWidth: 32,
-				frameHeight: 53
-			});
-			this.load.image("platform", "assets/tile2.png");
-		}
+	preload() {
+		this.load.image("background", "assets/physicsBackground.jpg");
+		this.load.spritesheet('item', 'assets/PotionsPack2.png', {
+			frameWidth: 32,
+			frameHeight: 32
+		});
+		//load spritesheet for the player
+		this.load.spritesheet('player', 'assets/Astronaut Player.png', {
+			frameWidth: 32,
+			frameHeight: 53
+		});
+		this.load.image("platform", "assets/tile2.png");
+	}
 
   create() {
 		this.anims.create({
@@ -55,10 +55,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
 				immovable: true, // Item should not move when collided
 			});
 
-			this.addGround(this.maxRows - 1);
-			this.addGround(0);
-			this.addRandomPlatforms();
-
 			// Create player
 			this.player = this.physics.add.sprite(250, 100, "player");
 			// this.player.setCollideWorldBounds(true); // Prevent player from falling out of the world
@@ -66,6 +62,11 @@ class PlanetPhysicsScene extends Phaser.Scene {
 			this.player.scale = 1.5;
 			this.player.setSize(26, 30);
 			this.player.setPushable(true);
+			
+			this.addPlatform(0, 0, this.maxCols + 1);
+			this.addGround(this.maxRows - 1);
+			// this.addGround(0);
+			this.addRandomPlatforms();
 
     this.jumpStrength = this.add
       .text(this.player.x, this.player.y - 36, "", {
@@ -79,8 +80,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
     });
     this.jumpStrength.setDepth(10);
 
-    this.addGround(this.maxRows - 1);
-    this.addGround(0);
     this.addRandomPlatforms();
 
 			this.physics.add.collider(this.player, this.platforms);
@@ -88,10 +87,14 @@ class PlanetPhysicsScene extends Phaser.Scene {
 			this.cursors = this.input.keyboard.createCursorKeys();
 
 			// Generate platforms every 2 seconds
+
+			setInterval(() => {
+				this.addPlatform(this.maxCols, 0, 1);
+			}, 150);
 			setInterval(() => {
 				this.addRandomPlatforms();
-				this.addGround(0);
-			}, 8000);
+				this.addGround(this.maxRows - 1, false);
+			}, 2000);
 		}
 
   // Function to collect items
@@ -117,7 +120,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 		addRandomPlatforms() {
 			for (let i = 1; i < 10; i++) {
 				this.addPlatform(
-					this.maxCols + i * 3, // Start generating beyond the screen
+					this.maxCols + i * 6, // Start generating beyond the screen
 					Math.floor(Math.random() * (this.maxRows - 6)) + 3,
 					Math.floor(Math.random() * 3) + 3
 				);
@@ -125,7 +128,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 			this.lastGeneratedX = this.maxCols; // Keep track of last X position
 		}
 
-		addGround(y) {
+		addGround(y, isFirst = true) {
 			let numGaps = Math.floor(Math.random() * 3) + 1;
 			let pos = [];
 			for (let i = 0; i < numGaps; i++) {
@@ -148,7 +151,12 @@ class PlanetPhysicsScene extends Phaser.Scene {
 					}
 				}
 				if (!isGap) {
-					this.addPlatform(i, y, 1);
+					if(isFirst) {
+						this.addPlatform(i, y, 1); 
+					} else {
+						this.addPlatform(i + this.maxCols + 1, y, 1);
+
+					}
 				}
 			}
 		}
@@ -178,12 +186,12 @@ class PlanetPhysicsScene extends Phaser.Scene {
 				platform.setImmovable(true);
 			}
 			if (Phaser.Math.FloatBetween(0, 1) > 0.9) {
-      const id = this.generateID();
+      	const id = this.generateID();
 				let item = this.items.create(platform.x, platform.y - 30, "item", 58);
 				//scale
 				item.setScale(1.5);
 				item.setSize(20, 20);
-      item.id = id;
+      	item.id = id;
 
 				item.setData("platform", platform);
 	
@@ -196,7 +204,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 	        })
 	        .setOrigin(0.5);
 	      scoreText.value = scoreText.setDepth(10);
-      scoreText.id = id;
+      	scoreText.id = id;
 	      this.texts.push(scoreText);
 
 				if (this.player && item) {
@@ -212,7 +220,11 @@ class PlanetPhysicsScene extends Phaser.Scene {
 		}
 
 		update() {
-			
+			if(this.player.body.velocity.x < 0) {
+				this.player.flipX = true;
+			} else {
+				this.player.flipX = false;
+			}
 			this.player.anims.play('run', true);
     if (this.counterItem == this.neededItemToCollect) {
       this.scene.start(PlanetGeologyScene);
