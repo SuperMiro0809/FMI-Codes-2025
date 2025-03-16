@@ -70,11 +70,13 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.jumpStrength = this.add
       .text(this.player.x, this.player.y - 36, "", {
         fontSize: "25px",
+		fontFamily: 'Orbitron',
         fill: "#ffffff",
       })
       .setOrigin(0.5);
     this.currentGetElement = this.add.text(80, 50, "Collected Items: 0/5", {
       fontSize: "25px",
+	  fontFamily: 'Orbitron',
       fill: "#ffffff",
     });
     this.jumpStrength.setDepth(10);
@@ -192,6 +194,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 	      let scoreText = this.add
 	        .text(item.x, item.y - 36, item.value, {
 	          fontSize: "25px",
+			  fontFamily: 'Orbitron',
 	          fill: "#ffffff",
 	        })
 	        .setOrigin(0.5);
