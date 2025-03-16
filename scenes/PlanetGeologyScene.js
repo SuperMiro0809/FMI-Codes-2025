@@ -153,7 +153,7 @@ class PlanetGeologyScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    this.time.delayedCall(12000, () => {
+    this.time.delayedCall(13000, () => {
       if (this.isAlive) {
         this.timer += 1;
         if (this.timer % 87 == 0) {
@@ -167,7 +167,20 @@ class PlanetGeologyScene extends Phaser.Scene {
       }
     });
     if (this.cameras.main.scrollY - this.player.y > 0) {
+      // loose
       this.isAlive = false;
+      this.add.text(this.scale.width / 2, this.scale.height / 2, 'You Lost!', {
+        fontSize: '32px',
+        fontFamily: 'Orbitron',
+        fill: '#ff0000',
+        backgroundColor: '#222222',
+        padding: { x: 20, y: 10 }
+      }).setOrigin(0.5).setDepth(1000).setScrollFactor(0);
+
+      this.time.delayedCall(2000, () => {
+        this.cameras.main.fadeOut(1000, 0, 0, 0);
+        this.scene.restart();
+      });
     }
     let tilePlayer = this.getTilePlayerIsOn();
 
