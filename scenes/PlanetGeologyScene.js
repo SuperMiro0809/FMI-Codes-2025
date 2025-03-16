@@ -154,7 +154,7 @@ class PlanetGeologyScene extends Phaser.Scene {
   }
 
   update(time, delta) {
-    this.time.delayedCall(10000, () => {
+    this.time.delayedCall(12000, () => {
       this.timer += 1;
       if (this.timer % 87 == 0) {
         this.updateGrid();
@@ -166,7 +166,7 @@ class PlanetGeologyScene extends Phaser.Scene {
       }
     });
     if (this.cameras.main.scrollY - this.player.y > 0) {
-      // this.isAlive = false;
+        this.isAlive = false;
     }
     let tilePlayer = this.getTilePlayerIsOn();
 
@@ -234,8 +234,22 @@ class PlanetGeologyScene extends Phaser.Scene {
 
         if (this.crystalsCount == 5) {
           //won
-          // this.cameras.main.fadeOut(1000);
-          this.scene.start("LeavingScene", { from: "geologyPlanet", to: "technoPlanet" })
+          this.add.text(this.scale.width / 2, this.scale.height / 2, 'You Win!', {
+            fontSize: '32px',
+            fontFamily: 'Orbitron',
+            fill: '#00ff88',
+            backgroundColor: '#222222',
+            padding: { x: 20, y: 10 }
+          }).setOrigin(0.5).setDepth(1000); // Center the text and bring it to the top layer
+
+          // Wait for 2 seconds before fading out
+          this.time.delayedCall(2000, () => {
+            this.cameras.main.fadeOut(1000, 0, 0, 0);
+
+            this.time.delayedCall(500, () => {
+              this.scene.start("LeavingScene", { from: "geologyPlanet", to: "technoPlanet" })
+            });
+          });
         }
         this.scoreText.setText("Mined crystals: " + this.crystalsCount);
       }
