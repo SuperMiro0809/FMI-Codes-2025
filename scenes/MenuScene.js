@@ -14,14 +14,14 @@ class MenuScene extends Phaser.Scene {
     const scaleY = this.scale.height / bg.height;
     bg.setScale(scaleX, scaleY);
 
-    const titleText = this.add.text(this.scale.width / 2, 350, 'Galactic Science Quest', { fontSize: '100px', fontFamily: 'Luxomona' })
+    const titleText = this.add.text(this.scale.width / 2, 350, 'Galactic Science Quest', { fontSize: '6rem', fontFamily: 'Luxomona' })
       .setOrigin(0.5);
 
     this.titleText = titleText;
     this.gradientShift = 0;
 
     const startBtn = this.add.text(this.scale.width / 2, 500, '▶️ Start Exploring', {
-      fontSize: '42px',
+      fontSize: '2.6rem',
       fontFamily: 'Orbitron',
       fill: '#00ff88',
       backgroundColor: 'rgba(0,0,0,0.5)',
