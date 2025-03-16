@@ -11,6 +11,7 @@ class PlanetGeologyScene extends Phaser.Scene {
   constructor() {
     super({ key: 'PlanetGeologyScene' });
   }
+
   preload() {
     this.cameras.main.fadeIn(500, 0, 0, 0);
     this.load.spritesheet('player', 'assets/miner.png', { frameWidth: 32, frameHeight: 32 });
@@ -79,7 +80,7 @@ class PlanetGeologyScene extends Phaser.Scene {
     this.player.setGravityY(300);
 
     this.scoreText = this.add.text(35, 35, "Mined crystals: " + this.crystalsCount, {
-      fontSize: '32px',
+      fontSize: '2rem',
       fontFamily: 'Orbitron',
       fill: '#ffffff'
     });
@@ -130,6 +131,7 @@ class PlanetGeologyScene extends Phaser.Scene {
     // Add keys for input
     this.cursors = this.input.keyboard.createCursorKeys();
   }
+
   updateGrid() {
     let firstRowY = this.startY;
     let firstRowTiles = this.ground.getChildren().filter(tile => {
@@ -171,7 +173,7 @@ class PlanetGeologyScene extends Phaser.Scene {
       // loose
       this.isAlive = false;
       this.add.text(this.scale.width / 2, this.scale.height / 2, 'You Lost!', {
-        fontSize: '32px',
+        fontSize: '2rem',
         fontFamily: 'Orbitron',
         fill: '#ff0000',
         backgroundColor: '#222222',
@@ -251,7 +253,7 @@ class PlanetGeologyScene extends Phaser.Scene {
           //won
           this.isAlive = false;
           this.add.text(this.scale.width / 2, this.scale.height / 2, 'You Win!', {
-            fontSize: '32px',
+            fontSize: '2rem',
             fontFamily: 'Orbitron',
             fill: '#00ff88',
             backgroundColor: '#222222',

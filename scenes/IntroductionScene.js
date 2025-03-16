@@ -40,7 +40,7 @@ class IntroductionScene extends Phaser.Scene {
 
     const text = this.add.text(this.scale.width / 2, this.scale.height + 1400, crawlText, {
       fontFamily: 'Orbitron, sans-serif',
-      fontSize: '48px',
+      fontSize: '2.9rem',
       fill: '#FFD700',
       align: 'center',
       wordWrap: { width: 1600, useAdvancedWrap: true }
@@ -80,7 +80,7 @@ class IntroductionScene extends Phaser.Scene {
 
     const skipBtn = this.add.text(this.scale.width - 20, this.scale.height - 20, 'SKIP →', {
       fontFamily: 'Orbitron, sans-serif',
-      fontSize: '32px',
+      fontSize: '2rem',
       fill: '#ffffff',
       backgroundColor: 'rgba(0,0,0,0.5)',
       padding: { x: 8, y: 5 }

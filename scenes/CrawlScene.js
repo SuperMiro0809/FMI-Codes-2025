@@ -35,7 +35,7 @@ class CrawlScene extends Phaser.Scene {
     endingLines.forEach((line, index) => {
       this.time.delayedCall(delay, () => {
         let text = this.add.text(this.scale.width / 2, 250 + index * 40, line, {
-          fontSize: '28px',
+          fontSize: '1.75rem',
           fontFamily: 'Orbitron',
           fill: '#000000',
           padding: { x: 10, y: 8 },
@@ -97,7 +97,7 @@ class CrawlScene extends Phaser.Scene {
       this.sys.game.canvas.height / 2,
       'CONGRATILATIONS \nYOU\'VE WON THE GAME!',
       {
-        fontSize: '70px',
+        fontSize: '4.375rem',
         fontStyle: 'bold',
         color: '#009933',
         align: 'center'
@@ -157,7 +157,7 @@ class CrawlScene extends Phaser.Scene {
       this.sys.game.canvas.height + 500,
       creditsText,
       {
-        fontSize: '36px',
+        fontSize: '2.25rem',
         color: '#ffffff',
         align: 'center',
         lineSpacing: 15
