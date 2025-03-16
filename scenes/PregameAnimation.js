@@ -129,7 +129,7 @@ class PregameAnimation extends Phaser.Scene {
     } else if (this.planet == "geologyPlanet") {
       this.scene.start("PlanetGeologyScene");
     } else if(this.planet == "physicsPlanet"){
-      this.scene.start("MenuScene");
+      this.scene.start("PlanetPhysicsScene");
     }else{
         this.scene.start("MenuScene");
     }

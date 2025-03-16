@@ -229,7 +229,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 			}
 			this.player.anims.play('run', true);
     if (this.counterItem == this.neededItemToCollect) {
-      this.scene.start(PlanetGeologyScene);
+      this.scene.start("LeavingScene", {from:"physicsPlanet", to:"earth"});
     }
 
     if (this.player.x < 0 || this.player.y > window.innerHeight) {
