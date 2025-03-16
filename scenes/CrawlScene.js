@@ -57,12 +57,73 @@ class CrawlScene extends Phaser.Scene {
   }
 
   showGameOver() {
-    this.add.text(this.sys.game.canvas.width / 2, this.sys.game.canvas.height / 2, 'CONGRATILATIONS \nYOU\'VE WON THE GAME!', {
-      fontSize: '70px',
-      fontStyle: 'bold',
-      color: '#009933',
-      align: 'center'
-    }).setOrigin(0.5)
-    .setShadow(5, 5, '#000', 10, true, true);
+    // Game won text 
+    const winText = this.add.text(
+      this.sys.game.canvas.width / 2, 
+      this.sys.game.canvas.height / 2, 
+      'CONGRATILATIONS \nYOU\'VE WON THE GAME!', 
+      { 
+        fontSize: '70px', 
+        fontStyle: 'bold', 
+        color: '#009933', 
+        align: 'center' 
+      }
+    ).setOrigin(0.5)
+      .setShadow(5, 5, '#000', 10, true, true);
+    
+    // Set a 5-second timer to fade out the win text
+    this.time.delayedCall(5000, () => {
+      // Fade out the win text
+      this.tweens.add({
+        targets: winText,
+        alpha: 0,
+        duration: 1000,
+        ease: 'Power2',
+        onComplete: () => {
+          // After win text fades out, show scrolling credits
+          this.showCredits();
+        }
+      });
+    });
+  }
+  
+  showCredits() {
+    const creditsText = 
+      'CREDITS\n\n' +
+      'DEVELOPMENT TEAM\n' +
+      'Miroslav Balev\n' +
+      'Mihail Dimitrov\n' +
+      'Milica Lazarova\n' +
+      'Maxim Hristov\n' +
+      'Alex Hristov\n\n' +
+      'ASSETS\n' +
+      'Spaceship - https://anim86.itch.io/space-shooter-ship-constructor\n' +
+      'Planets & Asteroids - https://deep-fold.itch.io/pixel-planet-generator\n' +
+      'Astronaut - https://floatingkites.itch.io/cute-astronaut\n\n' +
+      'DEVELOPED WITH\n' +
+      'Phaser 3\n\n' +
+      'THANK YOU FOR PLAYING!';
+    
+    // Position the credits below the bottom of the screen
+    const credits = this.add.text(
+      this.sys.game.canvas.width / 2, 
+      this.sys.game.canvas.height + 500, 
+      creditsText, 
+      { 
+        fontSize: '36px',
+        color: '#ffffff',
+        align: 'center',
+        lineSpacing: 15
+      }
+    ).setOrigin(0.5)
+      .setShadow(2, 2, '#000', 3, true, true);
+    
+    // Create a scrolling tween for the credits
+    this.tweens.add({
+      targets: credits,
+      y: -credits.height, // Scroll until the credits disappear above the screen
+      duration: 20000, // Adjust duration to control scrolling speed
+      ease: 'Linear'
+    });
   }
 }
