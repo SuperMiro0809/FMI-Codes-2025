@@ -40,7 +40,7 @@ class IntroductionScene extends Phaser.Scene {
 
     const text = this.add.text(this.scale.width / 2, this.scale.height + 1400, crawlText, {
       fontFamily: 'Orbitron, sans-serif',
-      fontSize: '48px',
+      fontSize: '3rem',
       fill: '#FFD700',
       align: 'center',
       wordWrap: { width: 1600, useAdvancedWrap: true }
