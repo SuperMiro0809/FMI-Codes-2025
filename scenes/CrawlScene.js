@@ -20,7 +20,7 @@ class CrawlScene extends Phaser.Scene {
     const bgScale = Math.max(width / backImage.width, height / backImage.height);
     backImage.setScale(bgScale).setScrollFactor(0);
 
-    this.avatar = this.physics.add.sprite(250, -100, 'avatar').setOrigin(0.5);
+    this.avatar = this.physics.add.sprite(250, -200, 'avatar').setOrigin(0.5);
     this.avatar.setScale(2.2);
 
     const endingLines = [
@@ -66,11 +66,11 @@ class CrawlScene extends Phaser.Scene {
 
     this.tweens.add({
       targets: this.avatar,
-      y: height - 240,
+      y: height - 150,
       duration: 2000,
       ease: 'Sine.easeInOut',
       onComplete: () => {
-        this.character = this.physics.add.sprite(300, height - 130, 'character').setOrigin(0.5);
+        this.character = this.physics.add.sprite(300, height -55, 'character').setOrigin(0.5);
         this.character.setScale(2);
         this.character.play('walk_left')
         this.startCharacterWalk();
@@ -94,7 +94,7 @@ class CrawlScene extends Phaser.Scene {
     // Game won text 
     const winText = this.add.text(
       this.sys.game.canvas.width / 2,
-      this.sys.game.canvas.height / 2,
+      this.sys.game.canvas.height / 1.6,
       'CONGRATILATIONS \nYOU\'VE WON THE GAME!',
       {
         fontSize: '4.375rem',
@@ -138,7 +138,7 @@ class CrawlScene extends Phaser.Scene {
       'DEVELOPMENT TEAM\n' +
       'Miroslav Balev\n' +
       'Mihail Dimitrov\n' +
-      'Milica Lazarova\n' +
+      'Militsa Lazarova\n' +
       'Maxim Hristov\n' +
       'Alex Hristov\n\n' +
       'ASSETS\n' +
@@ -165,11 +165,11 @@ class CrawlScene extends Phaser.Scene {
     ).setOrigin(0.5)
       .setShadow(2, 2, '#000', 3, true, true);
 
-    // Create a scrolling tween for the credits
+    
     this.tweens.add({
       targets: credits,
-      y: -credits.height, // Scroll until the credits disappear above the screen
-      duration: 20000, // Adjust duration to control scrolling speed
+      y: -credits.height, 
+      duration: 20000, 
       ease: 'Linear',
       onComplete: () => {
         this.cameras.main.fadeOut(500, 0, 0, 0);

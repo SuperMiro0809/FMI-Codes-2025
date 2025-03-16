@@ -8,7 +8,7 @@ const spaceConfig = {
   asteroidScale: 2,
   asteroidImages: 4,
   asteroidSpawnOffset: 500,
-  spawnInterval: 500, // in miliseconds
+  spawnInterval: 800, // in miliseconds
   planetSpeed: 100,
   planetOffset: 100,
   time: 20,

@@ -44,7 +44,7 @@ class MenuScene extends Phaser.Scene {
     startBtn.on('pointerdown', () => {
       this.cameras.main.fadeOut(500, 0, 0, 0);
       this.time.delayedCall(500, () => {
-        this.scene.start('IntroductionScene');
+      this.scene.start('IntroductionScene');
       });
     });
   }

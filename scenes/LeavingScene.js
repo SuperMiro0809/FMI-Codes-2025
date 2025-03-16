@@ -42,7 +42,7 @@ class LeavingScene extends Phaser.Scene {
     this.avatar.setScale(2.2); 
 
     this.alien = this.physics.add.sprite(300, height / 1.25, alienAsset).setOrigin(0.5);
-    this.alien.setScale(0.3);
+    this.alien.setScale(0.20);
 
     this.character = this.physics.add.sprite(300, height / 1.2, 'character').setOrigin(0.5);
     this.character.setScale(2);
