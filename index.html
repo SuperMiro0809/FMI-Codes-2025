@@ -3,13 +3,32 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>Coming soon...</title>
+  <title>Galactic Science Quest</title>
+  <link rel="icon" type="image/png" href="assets/favicon-96x96.png" sizes="96x96" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <link rel="shortcut icon" href="assets/favicon.ico" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="assets/site.webmanifest" />
   <script src="node_modules/phaser/dist/phaser.min.js"></script>
   <style>
 		@font-face {
     	font-family: 'PixelRoundedFont';
     	src: url('assets/PixelRounded.ttf') format('truetype');
   	}
+    @font-face {
+      font-family: 'Luxomona';
+      src: url('/assets/fonts/Luxomona.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+    @font-face {
+      font-family: 'Orbitron';
+      src: url('/assets/fonts/Orbitron.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     html,
     body {
       margin: 0;
@@ -31,11 +50,19 @@
 
 <body>
 	<h1 class="title">Text</h1> <!-- for some reason the font doesn't load without this -->
+  <!-- USED TO LOAD FONT -->
+  <div style="font-family:Luxomona; position:absolute; left:-1000px; visibility:hidden;">.</div>
+  <div style="font-family:Orbitron; position:absolute; left:-1000px; visibility:hidden;">.</div>
+
   <script src="scenes/MenuScene.js"></script>
-  <script src="scenes/PlanetChemistryScene.js"></script>
 	<script src="scenes/PlanetPhysicsScene.js"></script>
+  <script src="scenes/IntroductionScene.js"></script>
+  <script src="scenes/PregameAnimation.js"></script>
   <script src="scenes/PlanetTechnologyScene.js"></script>
-	<script src="scenes/PlanetGeologyScene.js"></script>
+  <script src="scenes/PlanetGeologyScene.js"></script>
+  <script src="scenes/CrawlScene.js"></script>
+  <script src="scenes/SpaceScene.js"></script>
+  <script src="scenes/LeavingScene.js"></script>
   <script src="main.js"></script>
 </body>
 
