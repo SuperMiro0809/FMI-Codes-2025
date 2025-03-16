@@ -29,18 +29,37 @@ class PregameAnimation extends Phaser.Scene {
     this.alien.setScale(0.25);
     this.alien.setFlipX(true);
 
-    const button = this.add.rectangle(this.game.config.width - 150, this.game.config.height - 50, 150, 50, 0x007bff)
-    .setInteractive();
-
-  const buttonText = this.add.text(this.game.config.width - 150, this.game.config.height - 50, 'Skip', {
-    fontSize: '20px',
-    color: '#ffffff',
-  }).setOrigin(0.5);
-
-  button.on('pointerdown', () => {
-    this.buttonClicked(); // Call the function properly
-  });
-
+    const skipBtn = this.add.text(this.scale.width - 20, this.scale.height - 20, 'SKIP →', {
+        fontFamily: 'Orbitron, sans-serif',
+        fontSize: '32px',
+        fill: '#ffffff',
+        backgroundColor: 'rgba(0,0,0,0.5)',
+        padding: { x: 8, y: 5 }
+      }).setOrigin(1, 1).setInteractive({ useHandCursor: true });
+  
+      skipBtn.on('pointerover', () => {
+        this.tweens.add({
+          targets: skipBtn,
+          scale: 1.2,
+          duration: 200,
+          ease: 'Power2'
+        });
+        skipBtn.setStyle({ fill: '#FFFF00' });
+      });
+  
+      skipBtn.on('pointerout', () => {
+        this.tweens.add({
+          targets: skipBtn,
+          scale: 1.0,
+          duration: 200,
+          ease: 'Power2'
+        });
+        skipBtn.setStyle({ fill: '#FFFFFF' });
+      });
+  
+      skipBtn.on('pointerdown', () => {
+        this.buttonClicked();
+      });
 
   this.anims.create({
     key: 'walk',
