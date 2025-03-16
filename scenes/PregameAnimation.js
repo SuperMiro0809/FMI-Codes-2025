@@ -14,9 +14,10 @@ class PregameAnimation extends Phaser.Scene {
       });
   }
 
-  create() {
+  create(data) {
       const { width, height } = this.sys.game.canvas;
 
+      this.currentPlanet = data.planet;
       const backImage = this.add.image(width / 2, height / 2, 'backImage').setOrigin(0.5);
       const bgScale = Math.max(width / backImage.width, height / backImage.height);
       backImage.setScale(bgScale).setScrollFactor(0);

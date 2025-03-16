@@ -14,7 +14,7 @@ class LeavingScene extends Phaser.Scene {
     });
   }
 
-  create() {
+  create(data) {
     const { width, height } = this.sys.game.canvas;
 
     const backImage = this.add.image(width / 2, height / 2, 'backImage').setOrigin(0.5);
@@ -37,10 +37,10 @@ class LeavingScene extends Phaser.Scene {
       repeat: -1
     });
 
-    this.startCharacterWalk();
+    this.startCharacterWalk(data);
   }
 
-  startCharacterWalk() {
+  startCharacterWalk(data) {
     this.character.play('walk');
 
     this.tweens.add({
@@ -57,7 +57,7 @@ class LeavingScene extends Phaser.Scene {
           duration: 2000,
           ease: 'Cubic.easeIn',
           onComplete: () => {
-            this.scene.start("MenuScene");
+            this.scene.start("SpaceScene", {leftPlanet:data.from, rightPlanet:data.to});
           }
         });
       }

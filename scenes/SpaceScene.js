@@ -41,6 +41,7 @@ class SpaceScene extends Phaser.Scene {
   // }
 
   create(data) {
+    this.destination = data.rightPlanet
     this.cameras.main.fadeIn(500, 0, 0, 0);
 
     this.bg = this.add
@@ -178,7 +179,7 @@ class SpaceScene extends Phaser.Scene {
     this.progressBar.fillRoundedRect(this.progressBar.x, this.progressBar.y, (this.progress / 100) * spaceConfig.progressBarWidth, 10, 5);
 }
   changeScene(){
-    this.scene.start("MenuScene");
+    this.scene.start("PregameAnimation", {planet: this.destination});
   }
   spawnRightPlanet(rightPlanet = "chemistryPlanet"){
     this.rightPlanet = this.physics.add.sprite(this.game.config.width + 500, this.game.config.height/2, rightPlanet)
