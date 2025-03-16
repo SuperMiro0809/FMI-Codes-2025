@@ -3,7 +3,7 @@ const worldWidth = 400;
 const worldHeight = window.innerHeight + 500;
 const playerSpeed = 120;
 const changeOfCrystals = 0.1;
-const cameraSpeed = 0.3;
+const cameraSpeed = 0.2;
 const miningTime = 750;
 const changeOfStone = 0.25;
 
@@ -12,6 +12,7 @@ class PlanetGeologyScene extends Phaser.Scene {
     super({ key: 'PlanetGeologyScene' });
   }
   preload() {
+    this.cameras.main.fadeIn(500, 0, 0, 0);
     this.load.spritesheet('player', 'assets/miner.png', { frameWidth: 32, frameHeight: 32 });
     // this.load.spritesheet('ground', 'assets/tiles.png', {frameWidth: 16, frameHeight: 16});
     this.load.image('ground_top', 'assets/tile.png');

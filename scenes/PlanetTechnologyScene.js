@@ -6,6 +6,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
   }
 
   preload() {
+    this.cameras.main.fadeIn(500, 0, 0, 0);
     this.load.image('tech-planet-bg', 'assets/tech-planet-background.jpg');
   }
 
@@ -79,7 +80,6 @@ class PlanetTechnologyScene extends Phaser.Scene {
 
     let positions = [];
 
-    // center the grid inside the popup
     let gridOffsetX = -this.gridSize * this.cellSize / 2;
     let gridOffsetY = -this.gridSize * this.cellSize / 2 + GRID_OFFSET_Y_ADDON;
 
