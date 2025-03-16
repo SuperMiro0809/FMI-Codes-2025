@@ -1,4 +1,4 @@
-const GRID_OFFSET_Y_ADDON = 30;
+const GRID_OFFSET_Y_ADDON = 60;
 
 class PlanetTechnologyScene extends Phaser.Scene {
   constructor() {
@@ -23,8 +23,8 @@ class PlanetTechnologyScene extends Phaser.Scene {
   createPopup() {
     this.popupContainer = this.add.container(this.scale.width / 2, this.scale.height / 2).setAlpha(0);
 
-    const popupBg = this.add.rectangle(0, 0, 600, 760, 0x222222).setStrokeStyle(3, 0xffffff);
-    const popupTitle = this.add.text(-255, -350, 'Connect the Cables', {
+    const popupBg = this.add.rectangle(0, 0, 600, 680, 0x222222).setStrokeStyle(3, 0xffffff);
+    const popupTitle = this.add.text(-255, -310, 'Connect the Cables', {
       fontFamily: 'Orbitron',
       fontSize: '1.425rem',
       fill: '#FFBF00',
@@ -36,13 +36,13 @@ class PlanetTechnologyScene extends Phaser.Scene {
       Press Z to revert an action.
     `
 
-    const popupText = this.add.text(-280, -320, instructionsText, {
+    const popupText = this.add.text(-280, -290, instructionsText, {
       fontFamily: 'Orbitron',
       fontSize: '1rem',
       fill: '#ffffff',
     });
 
-    const resetButton = this.add.text(145, 310, '[RESET]', {
+    const resetButton = this.add.text(145, -315, '[RESET]', {
       fontSize: '1.25rem',
       fontFamily: 'Orbitron',
       fill: '#ff0000',
@@ -74,7 +74,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
     this.isDrawing = false;
     this.previewLines = [];
 
-    const colors = [0x00ff00, 0xff0000, 0x0000ff, 0xffff00];
+    const colors = [0x00ff00, 0xff0000, 0x0000ff, 0xffff00, 0xBF40BF];
     this.dots = [];
     this.grid = [];
 
@@ -107,7 +107,7 @@ class PlanetTechnologyScene extends Phaser.Scene {
     Phaser.Utils.Array.Shuffle(positions);
     let colorIndex = 0;
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       let pos1 = positions[i * 2];
       let pos2 = positions[i * 2 + 1];
       let color = colors[colorIndex];
