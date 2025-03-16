@@ -16,7 +16,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 
   create() {
     this.cameras.main.fadeIn(1000);
-
+		this.texts = [];
     this.maxRows = Math.floor(innerHeight / this.tileSize);
     this.maxCols = Math.floor(innerWidth / this.tileSize);
 
@@ -41,16 +41,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.player.setGravityY(this.gravity); // Set gravity
     this.player.setPushable(true);
 
-    this.scoreTexts = this.physics.add.group().setOrigin(0.5);
-
     this.physics.add.collider(this.player, this.platforms);
-
-    this.scoreText = this.add
-      .text(this.player.x, this.player.y - 10, "", {
-        fontSize: "32px",
-        fill: "#ffffff",
-      })
-      .setOrigin(0.5);
 
     this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -123,18 +114,22 @@ class PlanetPhysicsScene extends Phaser.Scene {
       platform.setData("destroyed", false);
       platform.setImmovable(true);
     }
-    if (Phaser.Math.FloatBetween(0, 1) > 0.95) {
+    if (Phaser.Math.FloatBetween(0, 1) > 0.9) {
       let item = this.items.create(platform.x, platform.y - 30, "item");
-      let scoreText = this.add
-        .text(item.x, item.y - 10, "", {
-          fontSize: "32px",
-          fill: "#ffffff",
-        })
-        .setOrigin(0.5);
       item.setData("platform", platform);
-      scoreText.setPosition(item.x, item.y - 20);
-      item.value = Phaser.Math.FloatBetween(0, 1);
+			
+      item.value = Phaser.Math.FloatBetween(0.5, 1);
       item.value = parseFloat(item.value.toFixed(2));
+			let scoreText = this.add
+			.text(item.x, item.y - 36, item.value, {
+				fontSize: "25px",
+				fill: "#ffffff",
+			})
+			.setOrigin(0.5);
+		scoreText.setDepth(10);
+		this.texts.push(scoreText);
+		console.log(scoreText);
+
       if (this.player && item) {
         this.physics.add.overlap(
           this.player,
@@ -175,7 +170,9 @@ class PlanetPhysicsScene extends Phaser.Scene {
         }
       }
     });
-
+		this.texts.forEach((text) => {
+			text.x -= this.cameraSpeed;
+		});
     this.items.children.iterate((item) => {
       if (item) {
         let platform = item.getData("platform");
@@ -183,9 +180,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
           item.x = platform.x; // Keep item aligned with platform
         }
         item.x -= this.cameraSpeed; // Move item left
-
-        this.scoreText.setPosition(item.x, item.y - 20);
-        this.scoreText.setText(item.value);
         // Remove items that go off-screen
         if (item.x < -this.tileSize) {
           this.items.remove(item, true, true);
