@@ -23,6 +23,40 @@ class CrawlScene extends Phaser.Scene {
     this.avatar = this.physics.add.sprite(250, -100, 'avatar').setOrigin(0.5);
     this.avatar.setScale(2.2);
 
+    const endingLines = [
+      "You have collected all technologies and scientific discoveries you needed.",
+      "Now only one thing remains – save Planet Earth!",
+      "To be continued..."
+    ];
+
+    let delay = 0;
+    this.textObjects = [];
+
+    endingLines.forEach((line, index) => {
+      this.time.delayedCall(delay, () => {
+        let text = this.add.text(this.scale.width / 2, 250 + index * 40, line, {
+          fontSize: '28px',
+          fontFamily: 'Orbitron',
+          fill: '#000000',
+          padding: { x: 10, y: 8 },
+        }).setOrigin(0.5);
+
+        text.setAlpha(0);
+        this.textObjects.push(text);
+
+        this.tweens.add({
+          targets: text,
+          alpha: 1,
+          duration: 1000,
+          ease: "Linear",
+        });
+
+      });
+
+      delay += 1500;
+    });
+
+
     this.anims.create({
       key: 'walk',
       frames: this.anims.generateFrameNumbers('character', { start: 0, end: 3 }),
@@ -83,6 +117,17 @@ class CrawlScene extends Phaser.Scene {
           // After win text fades out, show scrolling credits
           this.showCredits();
         }
+      });
+    });
+
+    this.textObjects.forEach((text, index) => {
+      this.time.delayedCall(5000, () => {
+        this.tweens.add({
+          targets: text,
+          alpha: 0,
+          duration: 1000,
+          ease: 'Power2'
+        });
       });
     });
   }
