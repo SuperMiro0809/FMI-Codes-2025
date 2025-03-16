@@ -155,9 +155,11 @@ class PlanetGeologyScene extends Phaser.Scene {
 
   update(time, delta) {
     this.time.delayedCall(12000, () => {
-      this.timer += 1;
-      if (this.timer % 87 == 0) {
-        this.updateGrid();
+      if (this.isAlive) {
+        this.timer += 1;
+        if (this.timer % 87 == 0) {
+          this.updateGrid();
+        }
       }
     });
     this.time.delayedCall(2000, () => {
@@ -166,7 +168,7 @@ class PlanetGeologyScene extends Phaser.Scene {
       }
     });
     if (this.cameras.main.scrollY - this.player.y > 0) {
-        this.isAlive = false;
+      this.isAlive = false;
     }
     let tilePlayer = this.getTilePlayerIsOn();
 
@@ -234,6 +236,7 @@ class PlanetGeologyScene extends Phaser.Scene {
 
         if (this.crystalsCount == 5) {
           //won
+          this.isAlive = false;
           this.add.text(this.scale.width / 2, this.scale.height / 2, 'You Win!', {
             fontSize: '32px',
             fontFamily: 'Orbitron',
