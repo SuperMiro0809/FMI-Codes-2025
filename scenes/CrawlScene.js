@@ -125,7 +125,13 @@ class CrawlScene extends Phaser.Scene {
       targets: credits,
       y: -credits.height, // Scroll until the credits disappear above the screen
       duration: 20000, // Adjust duration to control scrolling speed
-      ease: 'Linear'
+      ease: 'Linear',
+      onComplete: () => {
+        this.cameras.main.fadeOut(500, 0, 0, 0);
+        this.time.delayedCall(500, () => {
+          this.scene.start('MenuScene');
+        });
+      }
     });
   }
 }
