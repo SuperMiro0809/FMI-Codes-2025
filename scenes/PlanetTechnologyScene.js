@@ -2,7 +2,7 @@ const GRID_OFFSET_Y_ADDON = 60;
 
 class PlanetTechnologyScene extends Phaser.Scene {
   constructor() {
-    super({ key: 'PlanetTechnologyScene' });
+    super({ key: "PlanetTechnologyScene" });
   }
 
   preload() {
