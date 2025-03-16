@@ -7,8 +7,10 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.tileSize = 32;
     this.cameraSpeed = 3;
     this.lastGeneratedX = 0; // Track the last generated platform position
-		this.jumpStrength;
-	}
+    this.jumpStrength;
+    this.currentGetElement;
+    this.neededItemToCollect = 5;
+  }
 
 		preload() {
 			this.load.image("background", "assets/physicsBackground.jpg");
@@ -38,6 +40,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
     this.cameras.main.fadeIn(1000);
 		this.texts = [];
     this.isAlive = true;
+    this.counterItem = 0;
     this.maxRows = Math.floor(innerHeight / this.tileSize);
     this.maxCols = Math.floor(innerWidth / this.tileSize);
 
@@ -61,7 +64,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 			// this.player.setCollideWorldBounds(true); // Prevent player from falling out of the world
 			this.player.setGravityY(this.gravity); // Set gravity
 			this.player.scale = 1.5;
-			this.player.setSize(28, 32);
+			this.player.setSize(26, 30);
 			this.player.setPushable(true);
 
     this.jumpStrength = this.add
@@ -70,6 +73,10 @@ class PlanetPhysicsScene extends Phaser.Scene {
         fill: "#ffffff",
       })
       .setOrigin(0.5);
+    this.currentGetElement = this.add.text(80, 50, "Collected Items: 0/5", {
+      fontSize: "25px",
+      fill: "#ffffff",
+    });
     this.jumpStrength.setDepth(10);
 
     this.addGround(this.maxRows - 1);
@@ -95,16 +102,16 @@ class PlanetPhysicsScene extends Phaser.Scene {
     let newGravity = this.gravity * this.inventory; // Adjust gravity
     this.texts.forEach((text, index) => {
       if (text.id === item.id) {
-        // Destroy the Phaser sprite object from the scene
         text.destroy();
-
         // Remove the item from the array
         this.texts.splice(index, 1);
       }
     });
     this.physics.world.gravity.y = newGravity;
-    console.log("Gravity=" + this.physics.world.gravity.y);
-    console.log("SCORE UPP=" + this.inventory);
+    this.counterItem++;
+    this.currentGetElement.setText(
+      "Collected Items: " + this.counterItem + "/" + this.neededItemToCollect
+    );
   }
 
 		addRandomPlatforms() {
@@ -191,7 +198,6 @@ class PlanetPhysicsScene extends Phaser.Scene {
 	      scoreText.value = scoreText.setDepth(10);
       scoreText.id = id;
 	      this.texts.push(scoreText);
-	      console.log(scoreText);
 
 				if (this.player && item) {
 					this.physics.add.overlap(
@@ -208,10 +214,14 @@ class PlanetPhysicsScene extends Phaser.Scene {
 		update() {
 			
 			this.player.anims.play('run', true);
+    if (this.counterItem == this.neededItemToCollect) {
+      this.scene.start(PlanetGeologyScene);
+    }
+
     if (this.player.x < 0 || this.player.y > window.innerHeight) {
       // loose
       this.isAlive = false;
-
+			this.cameras.main.fadeOut(1000);
       this.jumpStrength.destroy();
 
       this.add
@@ -286,7 +296,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 
       // Player movement
       if (this.cursors.up.isDown && this.player.body.touching.down) {
-        this.player.setVelocityY(-this.gravity * this.inventory);
+        this.player.setVelocityY(-this.gravity * this.inventory - this.gravity);
       } else if (this.cursors.down.isDown) {
         this.player.setVelocityY(this.gravity * this.inventory);
       } else if (this.cursors.right.isDown) {
