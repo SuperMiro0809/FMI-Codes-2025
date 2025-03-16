@@ -5,6 +5,7 @@ class PregameAnimation extends Phaser.Scene {
 
   preload() {
     this.load.image('geologyBackImage', 'assets/geologyPlanet/background.jpg');
+    this.load.image('teachnoBackImage', 'assets/technoPlanet/background.png');
     this.load.image('avatar', 'assets/spaceship.png');
     this.load.image('geologyAlien', 'assets/aliens/dark-gray.png');
     this.load.image('technologyAlien', 'assets/aliens/masked.png');
@@ -29,7 +30,7 @@ class PregameAnimation extends Phaser.Scene {
         break;
       case 'technoPlanet':
         alienAsset = 'technologyAlien';
-        planetBackground = 'geologyBackImage';
+        planetBackground = 'teachnoBackImage';
         break;
     }
 
