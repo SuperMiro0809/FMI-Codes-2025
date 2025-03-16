@@ -95,8 +95,7 @@ class PlanetPhysicsScene extends Phaser.Scene {
 			}, 150);
 			setInterval(() => {
 				this.addRandomPlatforms();
-				this.addGround(this.maxRows - 1, false);
-			}, 2000);
+			}, 8000);
 		}
 
   // Function to collect items
