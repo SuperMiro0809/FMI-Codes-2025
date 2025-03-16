@@ -10,7 +10,8 @@ class MenuScene extends Phaser.Scene {
       .setInteractive();
 
     startBtn.on('pointerdown', () => {
-      this.scene.start('CrawlScene');
+      this.scene.start('PregameAnimation');
+      // toReturnto CrawlScene
     });
   }
 }
